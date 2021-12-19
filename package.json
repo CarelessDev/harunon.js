@@ -1,0 +1,13 @@
+{
+  "name": "harunon.js",
+  "version": "1.0.0",
+  "description": "Multipurpose Discord Bot with Music that serves our server",
+  "main": "index.js",
+  "author": "CarelessDev",
+  "license": "MIT",
+  "repository": "https://github.com/CarelessDev/harunon.js",
+  "devDependencies": {
+    "eslint": "^8.5.0",
+    "prettier": "^2.5.1"
+  }
+}
