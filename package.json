@@ -1,6 +1,6 @@
 {
   "name": "harunon.js",
-  "version": "3.0.0-alpha.1",
+  "version": "3.0.0-alpha.2",
   "description": "Multipurpose Discord Bot with Music that serves our server",
   "main": "index.js",
   "author": "CarelessDev",
@@ -14,14 +14,14 @@
     "start": "node --es-module-specifier-resolution=node dist/bot.js"
   },
   "devDependencies": {
-    "eslint": "^8.5.0",
+    "eslint": "^8.7.0",
     "prettier": "^2.5.1",
     "typescript": "^4.5.5"
   },
   "dependencies": {
     "@discordjs/builders": "^0.12.0",
     "chalk": "^5.0.0",
-    "cocoa-discord-utils": "^1.0.0-pre.2",
+    "cocoa-discord-utils": "^1.0.0-pre.5",
     "discord.js": "^13.6.0",
     "dotenv": "^14.3.2"
   }
