@@ -1,13 +1,28 @@
 {
   "name": "harunon.js",
-  "version": "1.0.0",
+  "version": "3.0.0-alpha.1",
   "description": "Multipurpose Discord Bot with Music that serves our server",
   "main": "index.js",
   "author": "CarelessDev",
   "license": "MIT",
+  "type": "module",
   "repository": "https://github.com/CarelessDev/harunon.js",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rimraf dist/*",
+    "cb": "yarn clean && yarn build",
+    "start": "node --es-module-specifier-resolution=node dist/bot.js"
+  },
   "devDependencies": {
     "eslint": "^8.5.0",
-    "prettier": "^2.5.1"
+    "prettier": "^2.5.1",
+    "typescript": "^4.5.5"
+  },
+  "dependencies": {
+    "@discordjs/builders": "^0.12.0",
+    "chalk": "^5.0.0",
+    "cocoa-discord-utils": "^1.0.0-pre.2",
+    "discord.js": "^13.6.0",
+    "dotenv": "^14.3.2"
   }
 }
