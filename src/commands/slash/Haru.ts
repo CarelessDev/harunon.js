@@ -1,5 +1,6 @@
 import { CommandInteraction, TextChannel } from "discord.js";
 
+import { getElapsed } from "cocoa-discord-utils/meta";
 import { CogClass } from "cocoa-discord-utils/slash/class";
 import { SlashCommand } from "cocoa-discord-utils/slash/class";
 import { CocoaBuilder, ephemeral } from "cocoa-discord-utils/template";
@@ -8,7 +9,7 @@ export class Haru extends CogClass {
     timePinged = 0;
 
     constructor() {
-        super("Haru", "Main Cog");
+        super("Haru", "Main Slash Cog");
     }
 
     @SlashCommand(
@@ -19,12 +20,11 @@ export class Haru extends CogClass {
     async ping(ctx: CommandInteraction) {
         this.timePinged++;
         const e = ctx.options.getBoolean("ephemeral") ?? false;
-        const interval = new Date().getTime() - ctx.createdAt.getTime();
         await ctx.reply({
-            content: `Pong! Ping = ${Math.round(interval)} ms, pinged ${
+            content: `Pong! Ping = ${getElapsed(ctx.createdAt)} ms, pinged ${
                 this.timePinged
             } times`,
-            ephemeral: e ?? false,
+            ephemeral: e,
         });
     }
 

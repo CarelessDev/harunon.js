@@ -1,14 +1,16 @@
+import { Message } from "discord.js";
+
 import {
     CogMessageClass,
     MessageCommand,
 } from "cocoa-discord-utils/message/class";
-import { Message } from "discord.js";
+import { getElapsed } from "cocoa-discord-utils/meta";
 
 export class Haru extends CogMessageClass {
     timePinged = 0;
 
     constructor() {
-        super("Haru", "Main Cog");
+        super("Haru", "Main Message Cog");
     }
 
     @MessageCommand({
@@ -20,7 +22,7 @@ export class Haru extends CogMessageClass {
         this.timePinged++;
         const interval = new Date().getTime() - msg.createdAt.getTime();
         await msg.reply(
-            `Pong! Ping = ${Math.round(interval)} ms, pinged ${
+            `Pong! Ping = ${getElapsed(msg.createdAt)} ms, pinged ${
                 this.timePinged
             } times`
         );
