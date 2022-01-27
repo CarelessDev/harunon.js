@@ -19,14 +19,14 @@ import { Haru } from "./commands/slash";
 const client = new Client(CocoaIntents);
 
 const mcenter = new MessageCenter(client, { prefixes: ["simp"] });
-mcenter.addCogs(new HaruM());
+mcenter.addCogs(new HaruM(client));
 mcenter.validateCommands();
 
 const scenter = new SlashCenter(
     client,
     process.env.GUILD_IDS?.split(",") ?? []
 );
-scenter.addCogs(new Haru());
+scenter.addCogs(new Haru(client));
 scenter.validateCommands();
 
 const activity = new ActivityGroupLoader("data/activities.json");
