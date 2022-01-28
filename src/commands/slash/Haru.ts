@@ -1,12 +1,12 @@
 import { Client, CommandInteraction, TextChannel } from "discord.js";
 
-import { CogClass, SlashCommand } from "cocoa-discord-utils/slash/class";
+import { CogSlashClass, SlashCommand } from "cocoa-discord-utils/slash/class";
 import { CocoaBuilder, ephemeral } from "cocoa-discord-utils/template";
 import { Embed } from "@discordjs/builders";
 
 import { Haruno } from "../shared";
 
-export class Haru extends CogClass {
+export class Haru extends CogSlashClass {
     readonly client: Client;
     timePinged = 0;
 

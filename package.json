@@ -21,7 +21,7 @@
   "dependencies": {
     "@discordjs/builders": "^0.12.0",
     "chalk": "^5.0.0",
-    "cocoa-discord-utils": "^1.0.0-pre.5",
+    "cocoa-discord-utils": "^1.0.0-pre.8",
     "discord.js": "^13.6.0",
     "dotenv": "^14.3.2"
   }
