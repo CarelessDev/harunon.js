@@ -1,12 +1,12 @@
-import { Client, Message } from "discord.js";
-
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
     CogMessageClass,
     MessageCommand,
 } from "cocoa-discord-utils/message/class";
-import { Embed } from "@discordjs/builders";
 
-import { Haruno } from "../shared";
+import { Client, Message } from "discord.js";
+
+import { Haruno, style } from "../shared";
 
 export class Haru extends CogMessageClass {
     readonly client: Client;
@@ -25,19 +25,14 @@ export class Haru extends CogMessageClass {
     async ping(msg: Message, strp: string) {
         this.timePinged++;
 
-        const emb = new Embed()
-            .setAuthor({
-                name: msg.author.tag,
-                iconURL: msg.author.avatarURL() ?? "",
-            })
-            .setColor(Haruno.Color)
+        const emb = style
+            .use(msg)
             .setTitle("Pong! Tai")
             .addField({
                 name: "Pinged since start",
                 value: `${this.timePinged}`,
             })
-            .setDescription(`Ping = ${this.client.ws.ping} ms`)
-            .setFooter({ text: Haruno.Footer(msg.createdAt) });
+            .setDescription(`Ping = ${this.client.ws.ping} ms`);
 
         await msg.reply({ embeds: [emb.toJSON()] });
     }

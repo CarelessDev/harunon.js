@@ -1,6 +1,6 @@
 {
   "name": "harunon.js",
-  "version": "3.0.0-alpha.3",
+  "version": "3.0.0-alpha.4",
   "description": "Multipurpose Discord Bot with Music that serves our server",
   "main": "index.js",
   "author": "CarelessDev",
@@ -11,18 +11,23 @@
     "build": "tsc",
     "clean": "rimraf dist/*",
     "cb": "yarn clean && yarn build",
-    "start": "node --es-module-specifier-resolution=node dist/bot.js"
+    "start": "node --es-module-specifier-resolution=node dist/bot.js",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "lint": "eslint src && prettier --check \"src/**/*.ts\""
   },
   "devDependencies": {
-    "eslint": "^8.7.0",
+    "@trivago/prettier-plugin-sort-imports": "^3.2.0",
+    "@typescript-eslint/eslint-plugin": "^5.12.0",
+    "@typescript-eslint/parser": "^5.12.0",
+    "eslint": "^8.9.0",
     "prettier": "^2.5.1",
     "typescript": "^4.5.5"
   },
   "dependencies": {
-    "@discordjs/builders": "^0.12.0",
     "chalk": "^5.0.0",
-    "cocoa-discord-utils": "^1.0.0-pre.8",
+    "cocoa-discord-utils": "^1.0.0-rc.4",
     "discord.js": "^13.6.0",
-    "dotenv": "^14.3.2"
+    "dotenv": "^16.0.0",
+    "node-fetch": "^3.2.0"
   }
 }

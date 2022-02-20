@@ -1,10 +1,18 @@
+import { CocoaBuildTime, CocoaVersion } from "cocoa-discord-utils/meta";
+import { CogSlashClass, SlashCommand } from "cocoa-discord-utils/slash/class";
+import {
+    CocoaBuilder,
+    CocoaOption,
+    Ephemeral,
+    getEphemeral,
+    getStatusFields,
+} from "cocoa-discord-utils/template";
+
 import { Client, CommandInteraction, TextChannel } from "discord.js";
 
-import { CogSlashClass, SlashCommand } from "cocoa-discord-utils/slash/class";
-import { CocoaBuilder, ephemeral } from "cocoa-discord-utils/template";
-import { Embed } from "@discordjs/builders";
+import fetch from "node-fetch";
 
-import { Haruno } from "../shared";
+import { style } from "../shared";
 
 export class Haru extends CogSlashClass {
     readonly client: Client;
@@ -17,26 +25,21 @@ export class Haru extends CogSlashClass {
 
     @SlashCommand(
         CocoaBuilder("ping", "Pong Tai!")
-            .addBooleanOption(ephemeral("Reduce mess caused to channel"))
+            .addBooleanOption(Ephemeral("Reduce mess caused to channel"))
             .toJSON()
     )
     async ping(ctx: CommandInteraction) {
         this.timePinged++;
         const e = ctx.options.getBoolean("ephemeral") ?? false;
 
-        const emb = new Embed()
-            .setAuthor({
-                name: ctx.user.tag,
-                iconURL: ctx.user.avatarURL() ?? "",
-            })
-            .setColor(Haruno.Color)
+        const emb = style
+            .use(ctx)
             .setTitle("Pong! Tai")
             .addField({
                 name: "Pinged since start",
                 value: `${this.timePinged}`,
             })
-            .setDescription(`Ping = ${this.client.ws.ping} ms`)
-            .setFooter({ text: Haruno.Footer(ctx.createdAt) });
+            .setDescription(`Ping = ${this.client.ws.ping} ms`);
 
         await ctx.reply({ embeds: [emb.toJSON()], ephemeral: e });
     }
@@ -60,11 +63,8 @@ export class Haru extends CogSlashClass {
 
     @SlashCommand(
         CocoaBuilder("kamui", "Clear Messages to delete what you have done")
-            .addIntegerOption((option) =>
-                option
-                    .setName("clear_amount")
-                    .setDescription("clear_amount")
-                    .setRequired(true)
+            .addIntegerOption(
+                CocoaOption("clear_amount", "Amount to *kamui*", true)
             )
             .toJSON()
     )
@@ -99,11 +99,8 @@ export class Haru extends CogSlashClass {
 
     @SlashCommand(
         CocoaBuilder("imposter", "Use Harunon to speak anything")
-            .addStringOption((option) =>
-                option
-                    .setName("message")
-                    .setDescription("Message for Harunon to Speak")
-                    .setRequired(true)
+            .addStringOption(
+                CocoaOption("message", "Message for Harunon to Speak", true)
             )
             .toJSON()
     )
@@ -119,5 +116,51 @@ export class Haru extends CogSlashClass {
                 ephemeral: true,
             });
         }
+    }
+
+    @SlashCommand(
+        CocoaBuilder("simp", "A Good Way to SIMP (Powered by Tenor)")
+            .addStringOption(CocoaOption("waifu_name", "Who to SIMP", true))
+            .addBooleanOption(Ephemeral("SIMP without anyone knowing"))
+            .toJSON()
+    )
+    async simp(ctx: CommandInteraction) {
+        const waifu_name = ctx.options.getString("waifu_name", true);
+        const ephemeral = ctx.options.getBoolean("ephemeral") ?? false;
+
+        const res = await fetch(
+            `https://g.tenor.com/v1/search?q=${waifu_name}&key=${process.env.TENOR_APIKEY}&limit=20`
+        );
+        const results = ((await res.json()) as { results: unknown[] }).results;
+
+        const randomed = results[
+            Math.floor(Math.random() * results.length)
+        ] as {
+            media: { gif: { url: string } }[];
+        };
+
+        await ctx.reply({ content: `${randomed.media[0].gif.url}`, ephemeral });
+    }
+
+    @SlashCommand(
+        CocoaBuilder("status", "Asking Haruno if she is fine")
+            .addBooleanOption(Ephemeral())
+            .toJSON()
+    )
+    async status(ctx: CommandInteraction) {
+        const ephemeral = getEphemeral(ctx);
+
+        const emb = style
+            .use(ctx)
+            .setTitle("Harunon's Status")
+            .setDescription(
+                `Harunon Bot Version: ${process.env.npm_package_version}\nCocoa Utils Version: ${CocoaVersion} / ${CocoaBuildTime}`
+            )
+            .addFields(...(await getStatusFields(ctx)))
+            .setFooter({
+                text: "Bot made by CarelessDev/oneesan-lover ❤️❤️❤️",
+            });
+
+        await ctx.reply({ embeds: [emb.toJSON()], ephemeral });
     }
 }

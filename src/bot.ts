@@ -1,8 +1,6 @@
 import "dotenv/config";
-import { startTime } from "./utils/perf";
 
-import chalk from "chalk";
-import { Client } from "discord.js";
+import { startTime } from "./utils/perf";
 
 import {
     ActivityGroupLoader,
@@ -11,16 +9,24 @@ import {
 } from "cocoa-discord-utils";
 import { MessageCenter } from "cocoa-discord-utils/message";
 import { SlashCenter } from "cocoa-discord-utils/slash";
-import { CocoaIntents } from "cocoa-discord-utils/template";
+import { DJCocoaOptions } from "cocoa-discord-utils/template";
+
+import { Client } from "discord.js";
+
+import chalk from "chalk";
 
 import { Haru as HaruM } from "./commands/message";
 import { Haru } from "./commands/slash";
 
-const client = new Client(CocoaIntents);
+const client = new Client(DJCocoaOptions);
 
 const mcenter = new MessageCenter(client, { prefixes: ["simp"] });
 mcenter.addCogs(new HaruM(client));
 mcenter.validateCommands();
+mcenter.on("error", async (name, err, msg) => {
+    console.log(chalk.red(`Command ${name} just error!`));
+    await msg.reply(`あら？, Error Occured: ${err}`);
+});
 
 const scenter = new SlashCenter(
     client,
@@ -28,6 +34,10 @@ const scenter = new SlashCenter(
 );
 scenter.addCogs(new Haru(client));
 scenter.validateCommands();
+scenter.on("error", async (name, err, ctx) => {
+    console.log(chalk.red(`Command ${name} just error!`));
+    await ctx.reply(`あら？, Error Occured: ${err}`);
+});
 
 const activity = new ActivityGroupLoader("data/activities.json");
 

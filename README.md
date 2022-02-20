@@ -23,4 +23,5 @@ replaced [SIMP Bot](https://github.com/CarelessDev/SIMP-Bot/)
 ```
 DISCORD_TOKEN
 GUILD_IDS sep by ,
+TENOR_APIKEY // PS Tenor API works even without API Key! lmao
 ```
