@@ -6,7 +6,7 @@ import {
 
 import { Client, Message } from "discord.js";
 
-import { Haruno, style } from "../shared";
+import { style } from "../shared";
 
 export class Haru extends CogMessageClass {
     readonly client: Client;
@@ -18,7 +18,17 @@ export class Haru extends CogMessageClass {
     }
 
     @MessageCommand({
-        name: "ping",
+        description: "Insult someone for being gay",
+    })
+    async gay(msg: Message, strp: string) {
+        const who =
+            strp.split(" ").filter((s) => s.length > 0)[0] ??
+            `<@${msg.author.id}>`;
+
+        await msg.channel.send(`${who} is gay!`);
+    }
+
+    @MessageCommand({
         aliases: ["ing"],
         description: "Pong Tai!",
     })
@@ -35,17 +45,5 @@ export class Haru extends CogMessageClass {
             .setDescription(`Ping = ${this.client.ws.ping} ms`);
 
         await msg.reply({ embeds: [emb] });
-    }
-
-    @MessageCommand({
-        name: "gay",
-        description: "Insult someone for being gay",
-    })
-    async gay(msg: Message, strp: string) {
-        const who =
-            strp.split(" ").filter((s) => s.length > 0)[0] ??
-            `<@${msg.author.id}>`;
-
-        await msg.channel.send(`${who} is gay!`);
     }
 }

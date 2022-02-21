@@ -16,12 +16,14 @@ import { Client } from "discord.js";
 import chalk from "chalk";
 
 import { Haru as HaruM } from "./commands/message";
+import { style } from "./commands/shared";
 import { Haru } from "./commands/slash";
 
 const client = new Client(DJCocoaOptions);
 
 const mcenter = new MessageCenter(client, { prefixes: ["simp"] });
 mcenter.addCogs(new HaruM(client));
+mcenter.useHelpCommand(style);
 mcenter.validateCommands();
 mcenter.on("error", async (name, err, msg) => {
     console.log(chalk.red(`Command ${name} just error!`));
@@ -33,6 +35,7 @@ const scenter = new SlashCenter(
     process.env.GUILD_IDS?.split(",") ?? []
 );
 scenter.addCogs(new Haru(client));
+scenter.useHelpCommand(style);
 scenter.validateCommands();
 scenter.on("error", async (name, err, ctx) => {
     console.log(chalk.red(`Command ${name} just error!`));
