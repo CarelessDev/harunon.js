@@ -14,6 +14,8 @@ import fetch from "node-fetch";
 
 import { style } from "../shared";
 
+import { HelixError, makeHelix } from "./_helix";
+
 export class Haru extends CogSlashClass {
     readonly client: Client;
     timePinged = 0;
@@ -24,33 +26,9 @@ export class Haru extends CogSlashClass {
     }
 
     @SlashCommand(
-        CocoaBuilder("ping", "Pong Tai!")
-            .addBooleanOption(Ephemeral("Reduce mess caused to channel"))
-            .toJSON()
-    )
-    async ping(ctx: CommandInteraction) {
-        this.timePinged++;
-        const e = ctx.options.getBoolean("ephemeral") ?? false;
-
-        const emb = style
-            .use(ctx)
-            .setTitle("Pong! Tai")
-            .addField({
-                name: "Pinged since start",
-                value: `${this.timePinged}`,
-            })
-            .setDescription(`Ping = ${this.client.ws.ping} ms`);
-
-        await ctx.reply({ embeds: [emb.toJSON()], ephemeral: e });
-    }
-
-    @SlashCommand(
         CocoaBuilder("blep", "No one have idea what command is this")
-            .addUserOption((option) =>
-                option
-                    .setName("person")
-                    .setDescription("Who you want to B L E P")
-                    .setRequired(true)
+            .addUserOption(
+                CocoaOption("person", "Who do you want to B L E P", true)
             )
             .toJSON()
     )
@@ -62,33 +40,32 @@ export class Haru extends CogSlashClass {
     }
 
     @SlashCommand(
-        CocoaBuilder("kamui", "Clear Messages to delete what you have done")
-            .addIntegerOption(
-                CocoaOption("clear_amount", "Amount to *kamui*", true)
-            )
+        CocoaBuilder("helix", "Adenine Thymine Cytosine Guanine")
+            .addStringOption(CocoaOption("text", "Text to Helix-ify", true))
             .toJSON()
     )
-    async kamui(ctx: CommandInteraction) {
-        const amount = ctx.options.getInteger("clear_amount", true);
+    async helix(ctx: CommandInteraction) {
+        const helix = ctx.options.getString("text", true);
 
-        if (ctx.channel instanceof TextChannel) {
-            await ctx.reply("**ザ・ハンドが消す!!!**");
-            await ctx.channel.bulkDelete(amount + 1);
+        const res = makeHelix(helix);
 
-            await ctx.channel.send(
-                `ザ・ハンドが**${amount}メッセージ**を消した!!!`
-            );
-            await ctx.channel.send(
-                "https://c.tenor.com/xexSk5SQBbAAAAAC/discord-mod.gif"
-            );
-        } else await ctx.reply("bruh, this doesn't work here");
+        if (res == HelixError.ILLEGAL_CHAR) {
+            await ctx.reply("Illegal String!");
+            return;
+        } else if (res == HelixError.ILLEGAL_LEN) {
+            await ctx.reply("Please don't try to make me, I have family!");
+            return;
+        }
+
+        await ctx.reply("Helix時間で～す！");
+        for (const helix of res) {
+            await ctx.channel?.send(helix);
+        }
     }
 
     @SlashCommand(
         CocoaBuilder("gay", "Insult someone for being gae")
-            .addUserOption((option) =>
-                option.setName("gay").setDescription("who are gay")
-            )
+            .addUserOption(CocoaOption("gay", "who are gay"))
             .toJSON()
     )
     async gay(ctx: CommandInteraction) {
@@ -116,6 +93,50 @@ export class Haru extends CogSlashClass {
                 ephemeral: true,
             });
         }
+    }
+
+    @SlashCommand(
+        CocoaBuilder("ping", "Pong Tai!")
+            .addBooleanOption(Ephemeral("Reduce mess caused to channel"))
+            .toJSON()
+    )
+    async ping(ctx: CommandInteraction) {
+        this.timePinged++;
+        const e = ctx.options.getBoolean("ephemeral") ?? false;
+
+        const emb = style
+            .use(ctx)
+            .setTitle("Pong! Tai")
+            .addField({
+                name: "Pinged since start",
+                value: `${this.timePinged}`,
+            })
+            .setDescription(`Ping = ${this.client.ws.ping} ms`);
+
+        await ctx.reply({ embeds: [emb], ephemeral: e });
+    }
+
+    @SlashCommand(
+        CocoaBuilder("kamui", "Clear Messages to delete what you have done")
+            .addIntegerOption(
+                CocoaOption("clear_amount", "Amount to *kamui*", true)
+            )
+            .toJSON()
+    )
+    async kamui(ctx: CommandInteraction) {
+        const amount = ctx.options.getInteger("clear_amount", true);
+
+        if (ctx.channel instanceof TextChannel) {
+            await ctx.reply("**ザ・ハンドが消す!!!**");
+            await ctx.channel.bulkDelete(amount + 1);
+
+            await ctx.channel.send(
+                `ザ・ハンドが**${amount}メッセージ**を消した!!!`
+            );
+            await ctx.channel.send(
+                "https://c.tenor.com/xexSk5SQBbAAAAAC/discord-mod.gif"
+            );
+        } else await ctx.reply("bruh, this doesn't work here");
     }
 
     @SlashCommand(
@@ -161,6 +182,6 @@ export class Haru extends CogSlashClass {
                 text: "Bot made by CarelessDev/oneesan-lover ❤️❤️❤️",
             });
 
-        await ctx.reply({ embeds: [emb.toJSON()], ephemeral });
+        await ctx.reply({ embeds: [emb], ephemeral });
     }
 }
