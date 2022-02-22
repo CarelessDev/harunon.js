@@ -7,7 +7,6 @@
   "printWidth": 80,
   "importOrder": [
     "^dotenv",
-    "^\\./utils",
     "^cocoa-discord-utils",
     "^discord.js",
     "^@discordjs",
