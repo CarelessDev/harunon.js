@@ -46,14 +46,13 @@ client.on("ready", (cli) => {
         chalk.cyan(
             `はるのん Ready! Logged in as ${cli.user.tag}, took ${process
                 .uptime()
-                .toFixed(2)} ms`
+                .toFixed(3)} seconds`
         )
     );
     scenter.syncCommands();
     useActivityGroup(client, activity);
 });
 
-const Console = new ConsoleManager();
-Console.useLogout(client).useReload(activity);
+new ConsoleManager().useLogout(client).useReload(activity);
 
 checkLogin(client, process.env.DISCORD_TOKEN);

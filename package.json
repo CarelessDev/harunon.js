@@ -1,6 +1,6 @@
 {
   "name": "harunon.js",
-  "version": "3.0.0-alpha.7",
+  "version": "3.0.0-beta.1",
   "description": "Multipurpose Discord Bot with Music that serves our server",
   "main": "index.js",
   "author": "CarelessDev",
@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "chalk": "^5.0.0",
-    "cocoa-discord-utils": "^1.0.0",
+    "cocoa-discord-utils": "^1.1.0-pre.1",
     "discord.js": "^13.6.0",
     "dotenv": "^16.0.0",
     "node-fetch": "^3.2.0"

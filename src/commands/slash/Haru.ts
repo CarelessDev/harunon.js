@@ -1,7 +1,7 @@
 import { CocoaBuildTime, CocoaVersion } from "cocoa-discord-utils/meta";
 import { CogSlashClass, SlashCommand } from "cocoa-discord-utils/slash/class";
 import {
-    CocoaBuilder,
+    AutoBuilder,
     CocoaOption,
     Ephemeral,
     getEphemeral,
@@ -26,7 +26,7 @@ export class Haru extends CogSlashClass {
     }
 
     @SlashCommand(
-        CocoaBuilder("blep", "No one have idea what command is this")
+        AutoBuilder("No one have idea what command is this")
             .addUserOption(
                 CocoaOption("person", "Who do you want to B L E P", true)
             )
@@ -40,7 +40,7 @@ export class Haru extends CogSlashClass {
     }
 
     @SlashCommand(
-        CocoaBuilder("helix", "Adenine Thymine Cytosine Guanine")
+        AutoBuilder("Adenine Thymine Cytosine Guanine")
             .addStringOption(CocoaOption("text", "Text to Helix-ify", true))
             .toJSON()
     )
@@ -64,7 +64,7 @@ export class Haru extends CogSlashClass {
     }
 
     @SlashCommand(
-        CocoaBuilder("gay", "Insult someone for being gae")
+        AutoBuilder("Insult someone for being gae")
             .addUserOption(CocoaOption("gay", "who are gay"))
             .toJSON()
     )
@@ -75,7 +75,7 @@ export class Haru extends CogSlashClass {
     }
 
     @SlashCommand(
-        CocoaBuilder("imposter", "Use Harunon to speak anything")
+        AutoBuilder("Use Harunon to speak anything")
             .addStringOption(
                 CocoaOption("message", "Message for Harunon to Speak", true)
             )
@@ -96,7 +96,7 @@ export class Haru extends CogSlashClass {
     }
 
     @SlashCommand(
-        CocoaBuilder("ping", "Pong Tai!")
+        AutoBuilder("Pong Tai!")
             .addBooleanOption(Ephemeral("Reduce mess caused to channel"))
             .toJSON()
     )
@@ -117,7 +117,7 @@ export class Haru extends CogSlashClass {
     }
 
     @SlashCommand(
-        CocoaBuilder("kamui", "Clear Messages to delete what you have done")
+        AutoBuilder("Clear Messages to delete what you have done")
             .addIntegerOption(
                 CocoaOption("clear_amount", "Amount to *kamui*", true)
             )
@@ -140,7 +140,7 @@ export class Haru extends CogSlashClass {
     }
 
     @SlashCommand(
-        CocoaBuilder("simp", "A Good Way to SIMP (Powered by Tenor)")
+        AutoBuilder("A Good Way to SIMP (Powered by Tenor)")
             .addStringOption(CocoaOption("waifu_name", "Who to SIMP", true))
             .addBooleanOption(Ephemeral("SIMP without anyone knowing"))
             .toJSON()
@@ -164,7 +164,7 @@ export class Haru extends CogSlashClass {
     }
 
     @SlashCommand(
-        CocoaBuilder("status", "Asking Haruno if she is fine")
+        AutoBuilder("Asking Haruno if she is fine")
             .addBooleanOption(Ephemeral())
             .toJSON()
     )

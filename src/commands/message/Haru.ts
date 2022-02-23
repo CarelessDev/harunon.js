@@ -32,7 +32,7 @@ export class Haru extends CogMessageClass {
         aliases: ["ing"],
         description: "Pong Tai!",
     })
-    async ping(msg: Message, strp: string) {
+    async ping(msg: Message) {
         this.timePinged++;
 
         const emb = style
