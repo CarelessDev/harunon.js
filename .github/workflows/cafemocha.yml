@@ -15,5 +15,7 @@ jobs:
         uses: c-hive/gha-yarn-cache@v2
       - name: Install Dependencies (Yarn)
         run: yarn install
+      - name: Build Test
+        run: yarn build
       - name: ESLint & Prettier Check
         run: yarn lint

@@ -16,7 +16,7 @@ import chalk from "chalk";
 
 import { Haru as HaruM } from "./commands/message";
 import { style } from "./commands/shared";
-import { Haru } from "./commands/slash";
+import { Haru, Kashi, Music, TTS } from "./commands/slash";
 
 const client = new Client(DJCocoaOptions);
 
@@ -28,11 +28,8 @@ mcenter.on("error", async (name, err, msg) => {
     await msg.reply(`あら？, Error Occured: ${err}`);
 });
 
-const scenter = new SlashCenter(
-    client,
-    process.env.GUILD_IDS?.split(",") ?? []
-);
-scenter.addCogs(new Haru(client));
+const scenter = new SlashCenter(client, process.env.GUILD_IDS?.split(","));
+scenter.addCogs(new Haru(client), new Kashi(), new Music(), new TTS());
 scenter.useHelpCommand(style);
 scenter.on("error", async (name, err, ctx) => {
     console.log(chalk.red(`Command ${name} just error!`));

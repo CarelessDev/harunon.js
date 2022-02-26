@@ -40,6 +40,19 @@ export class Haru extends CogSlashClass {
     }
 
     @SlashCommand(
+        AutoBuilder("Send some Emoji!")
+            .addStringOption(
+                CocoaOption("emoji_name", "Emoji to Echoes ACT 3!", true)
+            )
+            .toJSON()
+    )
+    async emoji(ctx: CommandInteraction) {
+        const emoji_name = ctx.options.getString("emoji_name", true);
+
+        await ctx.reply(`:${emoji_name}:`);
+    }
+
+    @SlashCommand(
         AutoBuilder("Adenine Thymine Cytosine Guanine")
             .addStringOption(CocoaOption("text", "Text to Helix-ify", true))
             .toJSON()
