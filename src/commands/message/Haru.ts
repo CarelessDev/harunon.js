@@ -9,12 +9,10 @@ import { Client, Message } from "discord.js";
 import { style } from "../shared";
 
 export class Haru extends CogMessageClass {
-    readonly client: Client;
     timePinged = 0;
 
-    constructor(client: Client) {
+    constructor() {
         super("Haru", "Main Message Cog");
-        this.client = client;
     }
 
     @MessageCommand({
@@ -42,7 +40,7 @@ export class Haru extends CogMessageClass {
                 name: "Pinged since start",
                 value: `${this.timePinged}`,
             })
-            .setDescription(`Ping = ${this.client.ws.ping} ms`);
+            .setDescription(`Ping = ${msg.client.ws.ping} ms`);
 
         await msg.reply({ embeds: [emb] });
     }

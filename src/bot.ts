@@ -21,7 +21,7 @@ import { Haru, Kashi, Music, TTS } from "./commands/slash";
 const client = new Client(DJCocoaOptions);
 
 const mcenter = new MessageCenter(client, { prefixes: ["simp"] });
-mcenter.addCogs(new HaruM(client));
+mcenter.addCogs(new HaruM());
 mcenter.useHelpCommand(style);
 mcenter.on("error", async (name, err, msg) => {
     console.log(chalk.red(`Command ${name} just error!`));
@@ -29,7 +29,7 @@ mcenter.on("error", async (name, err, msg) => {
 });
 
 const scenter = new SlashCenter(client, process.env.GUILD_IDS?.split(","));
-scenter.addCogs(new Haru(client), new Kashi(), new Music(), new TTS());
+scenter.addCogs(new Haru(), new Kashi(), new Music(), new TTS());
 scenter.useHelpCommand(style);
 scenter.on("error", async (name, err, ctx) => {
     console.log(chalk.red(`Command ${name} just error!`));

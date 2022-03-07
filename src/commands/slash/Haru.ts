@@ -8,21 +8,22 @@ import {
     getStatusFields,
 } from "cocoa-discord-utils/template";
 
-import { Client, CommandInteraction, TextChannel } from "discord.js";
+import { CommandInteraction, TextChannel } from "discord.js";
 
+import { createWriteStream } from "fs";
 import fetch from "node-fetch";
 
 import { style } from "../shared";
+import { getFrameListSync } from "../shared/haru";
+import { exec } from "../shared/os";
 
 import { HelixError, makeHelix } from "./_helix";
 
 export class Haru extends CogSlashClass {
-    readonly client: Client;
     timePinged = 0;
 
-    constructor(client: Client) {
+    constructor() {
         super("Haru", "Main Slash Cog");
-        this.client = client;
     }
 
     @SlashCommand(
@@ -88,6 +89,63 @@ export class Haru extends CogSlashClass {
     }
 
     @SlashCommand(
+        AutoBuilder("Create Golden Frame")
+            .addUserOption(
+                CocoaOption("who", "Who to put in the golden frame", true)
+            )
+            .addStringOption((option) =>
+                option
+                    .setName("frame")
+                    .setDescription("Frame Name")
+                    .setRequired(true)
+                    .addChoices(getFrameListSync())
+            )
+            .toJSON()
+    )
+    async goldenframe(ctx: CommandInteraction) {
+        const frame = ctx.options.getString("frame", true);
+
+        const target = ctx.options.getUser("who", true);
+
+        const url = target.avatarURL({ size: 4096 });
+
+        if (!url) {
+            await ctx.reply(
+                "Cannot G O L D E N F R A M E: Target user has no profile picture!"
+            );
+            return;
+        }
+
+        await ctx.deferReply();
+
+        const res = await fetch(url);
+
+        if (!res.body) {
+            await ctx.followUp("Where is body?");
+            return;
+        }
+
+        const stream = res.body.pipe(
+            createWriteStream("lib/golden-frame/input.png")
+        );
+
+        await new Promise<void>((res, rej) => {
+            stream.on("close", () => {
+                res();
+            });
+            stream.on("error", () => {
+                rej();
+            });
+        });
+
+        await exec(
+            `cd lib/golden-frame && src/cli.py build ${frame} input.png --output=output.png`
+        );
+
+        await ctx.followUp({ files: ["lib/golden-frame/output.png"] });
+    }
+
+    @SlashCommand(
         AutoBuilder("Use Harunon to speak anything")
             .addStringOption(
                 CocoaOption("message", "Message for Harunon to Speak", true)
@@ -124,7 +182,7 @@ export class Haru extends CogSlashClass {
                 name: "Pinged since start",
                 value: `${this.timePinged}`,
             })
-            .setDescription(`Ping = ${this.client.ws.ping} ms`);
+            .setDescription(`Ping = ${ctx.client.ws.ping} ms`);
 
         await ctx.reply({ embeds: [emb], ephemeral: e });
     }
