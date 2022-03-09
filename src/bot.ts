@@ -28,7 +28,7 @@ mcenter.on("error", async (name, err, msg) => {
     await msg.reply(`あら？, Error Occured: ${err}`);
 });
 
-const scenter = new SlashCenter(client, process.env.GUILD_IDS?.split(","));
+const scenter = new SlashCenter(client, process.env.DEV_GUILD_IDS?.split(","));
 scenter.addCogs(new Haru(), new Kashi(), new Music(), new TTS());
 scenter.useHelpCommand(style);
 scenter.on("error", async (name, err, ctx) => {

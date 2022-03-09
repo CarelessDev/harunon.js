@@ -13,7 +13,7 @@ import { CommandInteraction, TextChannel } from "discord.js";
 import { createWriteStream } from "fs";
 import fetch from "node-fetch";
 
-import { style } from "../shared";
+import { AllGuilds, style } from "../shared";
 import { getFrameListSync } from "../shared/haru";
 import { exec } from "../shared/os";
 
@@ -100,7 +100,8 @@ export class Haru extends CogSlashClass {
                     .setRequired(true)
                     .addChoices(getFrameListSync())
             )
-            .toJSON()
+            .toJSON(),
+        AllGuilds
     )
     async goldenframe(ctx: CommandInteraction) {
         const frame = ctx.options.getString("frame", true);
@@ -169,7 +170,8 @@ export class Haru extends CogSlashClass {
     @SlashCommand(
         AutoBuilder("Pong Tai!")
             .addBooleanOption(Ephemeral("Reduce mess caused to channel"))
-            .toJSON()
+            .toJSON(),
+        AllGuilds
     )
     async ping(ctx: CommandInteraction) {
         this.timePinged++;
@@ -237,7 +239,8 @@ export class Haru extends CogSlashClass {
     @SlashCommand(
         AutoBuilder("Asking Haruno if she is fine")
             .addBooleanOption(Ephemeral())
-            .toJSON()
+            .toJSON(),
+        AllGuilds
     )
     async status(ctx: CommandInteraction) {
         const ephemeral = getEphemeral(ctx);
