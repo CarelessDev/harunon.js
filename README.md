@@ -14,6 +14,8 @@
 
 Using above library and 💛JavaScript💛
 
+Will replace Harunon V2 or [Harunon(.py)](https://github.com/CarelessDev/Harunon)
+
 ## OUR Bot
 
 Haruno is the bot that will serve _our_ server

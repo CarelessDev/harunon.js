@@ -16,14 +16,16 @@ import {
 import { getAllAudioUrls } from "google-tts-api";
 import { IncomingMessage } from "http";
 import https from "https";
-import ytdl from "ytdl-core";
+import ytdl, { VideoDetails } from "ytdl-core";
 
 export interface Music {
     url: string;
+    detail: VideoDetails;
 }
 
 export namespace Voice {
-    export const music_queues: { [guildId: string]: Music } = {};
+    export const music_queue: { [guildId: string]: Music[] } = {};
+    export const now_playing: { [guildId: string]: Music } = {};
 
     /**
      * Joins to the channel if not already in one.
@@ -33,7 +35,7 @@ export namespace Voice {
         if (connection?.state.status == VoiceConnectionStatus.Ready) return;
 
         const voiceChannel = (ctx.member as GuildMember | undefined)?.voice
-            .channel as VoiceChannel;
+            .channel as VoiceChannel | undefined;
         if (!voiceChannel) return;
 
         await Voice.joinVoiceChannel(voiceChannel);
@@ -80,14 +82,40 @@ export namespace Voice {
         }
     }
 
-    export function playMusic(guildId: string, url: string) {
+    let isPlaying = false;
+
+    export async function addMusicToQueue(guildId: string, url: string) {
+        // TODO Get some meta info from youtube
+        const meta = await ytdl.getBasicInfo(url);
+        const detail = meta.player_response.videoDetails;
+
+        music_queue[guildId] ??= [];
+        music_queue[guildId].push({ url, detail });
+
+        if (!isPlaying) clearMusicQueue(guildId);
+    }
+
+    /**
+     * @param guildId
+     * @returns true if music finished successfully,
+     * false immediately if no connection found or later when error occured
+     */
+    export function clearMusicQueue(guildId: string) {
+        if (music_queue[guildId]?.length < 1) {
+            isPlaying = false;
+            return;
+        }
+
+        const music = music_queue[guildId].shift()!;
+        now_playing[guildId] = music;
+
         const connection = getVoiceConnection(guildId);
         if (!connection) return false;
 
         const audioPlayer = createAudioPlayer();
         connection.subscribe(audioPlayer);
 
-        const stream = ytdl(url, {
+        const stream = ytdl(music.url, {
             filter: "audioonly",
             quality: "highestaudio",
             highWaterMark: 1 << 25,
@@ -97,20 +125,25 @@ export namespace Voice {
         const resource = createAudioResource(stream);
         audioPlayer.play(resource);
 
+        isPlaying = true;
+
         return new Promise<boolean>((resolve, _) => {
             audioPlayer.on(AudioPlayerStatus.Idle, () => {
-                audioPlayer.stop();
-                console.log("MUSIC DONE");
+                clearMusicQueue(guildId);
                 resolve(true);
             });
             audioPlayer.on("error", (_) => {
-                audioPlayer.stop();
-                console.log("MUSIC FAIL");
+                clearMusicQueue(guildId);
                 resolve(false);
             });
         });
     }
 
+    /**
+     * Speak to current voice channel
+     * @returns true if success,
+     * false early if no connection, later if error occured
+     */
     export async function speak(
         guildId: string,
         text: string,

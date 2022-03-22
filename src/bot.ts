@@ -33,7 +33,7 @@ scenter.addCogs(new Haru(), new Kashi(), new Music(), new TTS());
 scenter.useHelpCommand(style);
 scenter.on("error", async (name, err, ctx) => {
     console.log(chalk.red(`Command ${name} just error!`));
-    await ctx.reply(`あら？, Error Occured: ${err}`);
+    await ctx.channel?.send(`あら？, Error Occured: ${err}`);
 });
 
 const activity = new ActivityGroupLoader("data/activities.json");
