@@ -128,6 +128,15 @@ export class Music extends CogSlashClass {
         await ctx.followUp({ embeds: [emb] });
     }
 
+    private trimLabel(p1: string, p2: string) {
+        const lenlim = 96 - p2.length;
+        if (p1.length > 96 - p2.length) {
+            p1 = p1.slice(0, lenlim - 3) + "...";
+        }
+
+        return `${p1} ${p2}`;
+    }
+
     @SlashCommand(
         AutoBuilder("Search Musics").addStringOption(
             CocoaOption("song", "What to search", true)
@@ -149,7 +158,7 @@ export class Music extends CogSlashClass {
 
         const emb = style
             .use(ctx)
-            .setTitle(`Search Results for **${song}**`)
+            .setTitle(`Search Results for "**${song}**"`)
             .setDescription(text || "NO RESULT");
 
         if (ss.length < 1) {
@@ -167,7 +176,10 @@ export class Music extends CogSlashClass {
             .addOptions(
                 ...ss.map((vid) => {
                     return {
-                        label: `${vid.title} [${vid.duration_raw}]`,
+                        label: this.trimLabel(
+                            vid.title,
+                            `[${vid.duration_raw}]`
+                        ),
                         description: "",
                         value: vid.link,
                     };
