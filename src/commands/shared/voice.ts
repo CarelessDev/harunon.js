@@ -1,3 +1,5 @@
+import youtube, { Scraper } from "@yimura/scraper";
+
 import { Context } from "cocoa-discord-utils";
 import { Awaitable } from "cocoa-discord-utils/internal/base";
 
@@ -17,12 +19,16 @@ import {
 import { getAllAudioUrls } from "google-tts-api";
 import { IncomingMessage } from "http";
 import https from "https";
-import ytdl, { VideoDetails } from "ytdl-core";
+import ytdl, { VideoDetails, videoInfo } from "ytdl-core";
 
 export interface Music {
     url: string;
     detail: VideoDetails;
+    rawmeta: videoInfo;
 }
+
+// @ts-ignore
+export const yt: Scraper = new youtube.default();
 
 export namespace Voice {
     export const music_queue: { [guildId: string]: Music[] } = {};
@@ -50,6 +56,7 @@ export namespace Voice {
         }
 
         await Voice.joinVoiceChannel(voiceChannel);
+
         return true;
     }
 
@@ -94,6 +101,10 @@ export namespace Voice {
         }
     }
 
+    export async function searchVideo(query: string) {
+        return (await yt.search(query)).videos;
+    }
+
     let isPlaying = false;
 
     /**
@@ -101,11 +112,15 @@ export namespace Voice {
      * @returns Meta Info of the Video
      */
     export async function addMusicToQueue(guildId: string, url: string) {
-        const meta = await ytdl.getBasicInfo(url);
+        if (!ytdl.validateURL(url)) {
+            url = (await searchVideo(url))[0].link;
+        }
+
+        const meta = await ytdl.getInfo(url);
         const detail = meta.player_response.videoDetails;
 
         music_queue[guildId] ??= [];
-        music_queue[guildId].push({ url, detail });
+        music_queue[guildId].push({ url, detail, rawmeta: meta });
 
         if (!isPlaying) playNextMusicInQueue(guildId);
 
@@ -133,7 +148,7 @@ export namespace Voice {
         const audioPlayer = createAudioPlayer();
         connection.subscribe(audioPlayer);
 
-        const stream = ytdl(music.url, {
+        const stream = ytdl.downloadFromInfo(music.rawmeta, {
             filter: "audioonly",
             quality: "highestaudio",
             highWaterMark: 1 << 25,
