@@ -25,7 +25,6 @@ export class Kashi extends CogSlashClass {
                     .addChoices(CommandChoice())
             )
             .addBooleanOption(Ephemeral())
-            .toJSON()
     )
     async lyric(ctx: CommandInteraction) {
         const song = ctx.options.getString("song", true);

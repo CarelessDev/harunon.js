@@ -4,6 +4,7 @@ import { Awaitable } from "cocoa-discord-utils/internal/base";
 import { GuildMember, VoiceChannel } from "discord.js";
 
 import {
+    AudioPlayer,
     AudioPlayerStatus,
     createAudioPlayer,
     createAudioResource,
@@ -25,20 +26,31 @@ export interface Music {
 
 export namespace Voice {
     export const music_queue: { [guildId: string]: Music[] } = {};
-    export const now_playing: { [guildId: string]: Music } = {};
+    export const now_playing: { [guildId: string]: Music | undefined } = {};
+    const audio_player: { [guildId: string]: AudioPlayer } = {};
 
     /**
      * Joins to the channel if not already in one.
+     * @returns `false` if no changes, `true` if new channel is joined
      */
     export async function joinFromContext(ctx: Context) {
         const connection = getVoiceConnection(ctx.guildId!);
-        if (connection?.state.status == VoiceConnectionStatus.Ready) return;
 
         const voiceChannel = (ctx.member as GuildMember | undefined)?.voice
             .channel as VoiceChannel | undefined;
-        if (!voiceChannel) return;
+
+        if (!voiceChannel) return false;
+
+        const guild = ctx.client.guilds.cache.get(ctx.guildId!);
+
+        if (!guild?.available) return false;
+
+        if (connection?.state.status == VoiceConnectionStatus.Ready) {
+            return false;
+        }
 
         await Voice.joinVoiceChannel(voiceChannel);
+        return true;
     }
 
     export async function joinVoiceChannel(
@@ -84,15 +96,20 @@ export namespace Voice {
 
     let isPlaying = false;
 
+    /**
+     * Add music to queue and play it if not playing
+     * @returns Meta Info of the Video
+     */
     export async function addMusicToQueue(guildId: string, url: string) {
-        // TODO Get some meta info from youtube
         const meta = await ytdl.getBasicInfo(url);
         const detail = meta.player_response.videoDetails;
 
         music_queue[guildId] ??= [];
         music_queue[guildId].push({ url, detail });
 
-        if (!isPlaying) clearMusicQueue(guildId);
+        if (!isPlaying) playNextMusicInQueue(guildId);
+
+        return meta;
     }
 
     /**
@@ -100,13 +117,14 @@ export namespace Voice {
      * @returns true if music finished successfully,
      * false immediately if no connection found or later when error occured
      */
-    export function clearMusicQueue(guildId: string) {
+    export function playNextMusicInQueue(guildId: string) {
         if (music_queue[guildId]?.length < 1) {
             isPlaying = false;
+            getVoiceConnection(guildId)?.disconnect();
             return;
         }
 
-        const music = music_queue[guildId].shift()!;
+        const music = music_queue[guildId]!.shift()!;
         now_playing[guildId] = music;
 
         const connection = getVoiceConnection(guildId);
@@ -127,16 +145,40 @@ export namespace Voice {
 
         isPlaying = true;
 
-        return new Promise<boolean>((resolve, _) => {
+        return new Promise<boolean>((resolve, reject) => {
             audioPlayer.on(AudioPlayerStatus.Idle, () => {
-                clearMusicQueue(guildId);
+                playNextMusicInQueue(guildId);
                 resolve(true);
             });
-            audioPlayer.on("error", (_) => {
-                clearMusicQueue(guildId);
-                resolve(false);
+            audioPlayer.on("error", (err) => {
+                playNextMusicInQueue(guildId);
+                reject(err);
             });
         });
+    }
+
+    /**
+     * Skip the music by force playing next song
+     */
+    export function skipMusic(guildId: string) {
+        const connection = getVoiceConnection(guildId);
+
+        if (!connection) return false;
+
+        playNextMusicInQueue(guildId);
+    }
+
+    /**
+     * Clear all music in queue, stops the current audio player
+     */
+    export function clearMusicQueue(guildId: string) {
+        music_queue[guildId] = [];
+
+        audio_player[guildId]?.stop();
+
+        now_playing[guildId] = undefined;
+
+        playNextMusicInQueue(guildId);
     }
 
     /**
@@ -166,25 +208,33 @@ export namespace Voice {
             )
         );
 
+        if (audio_player[guildId]) {
+            audio_player[guildId].stop();
+        }
+
         const audioPlayer = createAudioPlayer();
+        audio_player[guildId] = audioPlayer;
+
         connection.subscribe(audioPlayer);
 
         audioPlayer.play(streams[0]);
         let next = 1;
 
-        return new Promise<boolean>((resolve, _) => {
+        return new Promise<boolean>((resolve, reject) => {
             audioPlayer.on(AudioPlayerStatus.Idle, () => {
                 if (next < streams.length) {
                     audioPlayer.play(streams[next]);
                     next++;
                 } else {
                     audioPlayer.stop();
+                    getVoiceConnection(guildId)?.disconnect();
                     resolve(true);
                 }
             });
-            audioPlayer.on("error", (_) => {
+            audioPlayer.on("error", (err) => {
                 audioPlayer.stop();
-                resolve(false);
+                getVoiceConnection(guildId)?.disconnect();
+                reject(err);
             });
         });
     }

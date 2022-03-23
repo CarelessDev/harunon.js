@@ -14,7 +14,6 @@ export class TTS extends CogSlashClass {
         AutoBuilder("Speak!")
             .addStringOption(CocoaOption("text", "What to speak", true))
             .addStringOption(CocoaOption("lang", "Language"))
-            .toJSON()
     )
     async speak(ctx: CommandInteraction) {
         const text = ctx.options.getString("text", true);

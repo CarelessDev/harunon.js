@@ -27,11 +27,9 @@ export class Haru extends CogSlashClass {
     }
 
     @SlashCommand(
-        AutoBuilder("No one have idea what command is this")
-            .addUserOption(
-                CocoaOption("person", "Who do you want to B L E P", true)
-            )
-            .toJSON()
+        AutoBuilder("No one have idea what command is this").addUserOption(
+            CocoaOption("person", "Who do you want to B L E P", true)
+        )
     )
     async blep(ctx: CommandInteraction) {
         const person = ctx.options.getUser("person", true);
@@ -41,11 +39,9 @@ export class Haru extends CogSlashClass {
     }
 
     @SlashCommand(
-        AutoBuilder("Send some Emoji!")
-            .addStringOption(
-                CocoaOption("emoji_name", "Emoji to Echoes ACT 3!", true)
-            )
-            .toJSON()
+        AutoBuilder("Send some Emoji!").addStringOption(
+            CocoaOption("emoji_name", "Emoji to Echoes ACT 3!", true)
+        )
     )
     async emoji(ctx: CommandInteraction) {
         const emoji_name = ctx.options.getString("emoji_name", true);
@@ -54,9 +50,9 @@ export class Haru extends CogSlashClass {
     }
 
     @SlashCommand(
-        AutoBuilder("Adenine Thymine Cytosine Guanine")
-            .addStringOption(CocoaOption("text", "Text to Helix-ify", true))
-            .toJSON()
+        AutoBuilder("Adenine Thymine Cytosine Guanine").addStringOption(
+            CocoaOption("text", "Text to Helix-ify", true)
+        )
     )
     async helix(ctx: CommandInteraction) {
         const helix = ctx.options.getString("text", true);
@@ -78,9 +74,9 @@ export class Haru extends CogSlashClass {
     }
 
     @SlashCommand(
-        AutoBuilder("Insult someone for being gae")
-            .addUserOption(CocoaOption("gay", "who are gay"))
-            .toJSON()
+        AutoBuilder("Insult someone for being gae").addUserOption(
+            CocoaOption("gay", "who are gay")
+        )
     )
     async gay(ctx: CommandInteraction) {
         const who = ctx.options.getUser("gay") ?? ctx.user;
@@ -99,8 +95,7 @@ export class Haru extends CogSlashClass {
                     .setDescription("Frame Name")
                     .setRequired(true)
                     .addChoices(getFrameListSync())
-            )
-            .toJSON(),
+            ),
         AllGuilds
     )
     async goldenframe(ctx: CommandInteraction) {
@@ -147,11 +142,9 @@ export class Haru extends CogSlashClass {
     }
 
     @SlashCommand(
-        AutoBuilder("Use Harunon to speak anything")
-            .addStringOption(
-                CocoaOption("message", "Message for Harunon to Speak", true)
-            )
-            .toJSON()
+        AutoBuilder("Use Harunon to speak anything").addStringOption(
+            CocoaOption("message", "Message for Harunon to Speak", true)
+        )
     )
     async imposter(ctx: CommandInteraction) {
         const message = ctx.options.getString("message", true);
@@ -168,9 +161,9 @@ export class Haru extends CogSlashClass {
     }
 
     @SlashCommand(
-        AutoBuilder("Pong Tai!")
-            .addBooleanOption(Ephemeral("Reduce mess caused to channel"))
-            .toJSON(),
+        AutoBuilder("Pong Tai!").addBooleanOption(
+            Ephemeral("Reduce mess caused to channel")
+        ),
         AllGuilds
     )
     async ping(ctx: CommandInteraction) {
@@ -190,11 +183,11 @@ export class Haru extends CogSlashClass {
     }
 
     @SlashCommand(
-        AutoBuilder("Clear Messages to delete what you have done")
-            .addIntegerOption(
-                CocoaOption("clear_amount", "Amount to *kamui*", true)
-            )
-            .toJSON()
+        AutoBuilder(
+            "Clear Messages to delete what you have done"
+        ).addIntegerOption(
+            CocoaOption("clear_amount", "Amount to *kamui*", true)
+        )
     )
     async kamui(ctx: CommandInteraction) {
         const amount = ctx.options.getInteger("clear_amount", true);
@@ -216,7 +209,6 @@ export class Haru extends CogSlashClass {
         AutoBuilder("A Good Way to SIMP (Powered by Tenor)")
             .addStringOption(CocoaOption("waifu_name", "Who to SIMP", true))
             .addBooleanOption(Ephemeral("SIMP without anyone knowing"))
-            .toJSON()
     )
     async simp(ctx: CommandInteraction) {
         const waifu_name = ctx.options.getString("waifu_name", true);
@@ -237,9 +229,9 @@ export class Haru extends CogSlashClass {
     }
 
     @SlashCommand(
-        AutoBuilder("Asking Haruno if she is fine")
-            .addBooleanOption(Ephemeral())
-            .toJSON(),
+        AutoBuilder("Asking Haruno if she is fine").addBooleanOption(
+            Ephemeral()
+        ),
         AllGuilds
     )
     async status(ctx: CommandInteraction) {

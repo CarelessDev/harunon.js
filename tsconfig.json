@@ -9,7 +9,8 @@
         "skipLibCheck": true,
         "moduleResolution": "node",
         "experimentalDecorators": true,
-        "incremental": true
+        "incremental": true,
+        "strictNullChecks": true
     },
     "include": ["./src/**/*"]
 }

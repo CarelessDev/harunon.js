@@ -11,6 +11,14 @@ export class Music extends CogSlashClass {
         super("Music", "DJ Harunon 参上!");
     }
 
+    private parseLength(seconds: number) {
+        const minutes = Math.floor(seconds / 60);
+
+        seconds %= 60;
+
+        return `${minutes}:${seconds >= 10 ? `${seconds}` : `0${seconds}`}`;
+    }
+
     @SlashCommand(
         AutoBuilder("Play a song!").addStringOption(
             CocoaOption("song", "Song to play", true)
@@ -19,11 +27,53 @@ export class Music extends CogSlashClass {
     async play(ctx: CommandInteraction) {
         const song = ctx.options.getString("song", true);
 
+        await ctx.deferReply();
+
         await Voice.joinFromContext(ctx);
 
-        await ctx.reply("Done!");
+        const fullmeta = await Voice.addMusicToQueue(ctx.guildId!, song);
+        const meta = fullmeta.player_response.videoDetails;
 
-        Voice.addMusicToQueue(ctx.guildId!, song);
+        const metalong = fullmeta.videoDetails;
+
+        const emb = style
+            .use(ctx)
+            .setTitle("Added to Queue")
+            .setDescription(`[${meta.title}](${metalong.video_url})`)
+            .setThumbnail(
+                meta.thumbnail.thumbnails[meta.thumbnail.thumbnails.length - 1]
+                    .url
+            )
+            .addInlineFields(
+                {
+                    name: "Author",
+                    value: `[${meta.author}](${metalong.author.channel_url})`,
+                },
+                {
+                    name: "Author Subscribers",
+                    value: `${metalong.author.subscriber_count ?? "Unknown"}`,
+                },
+                {
+                    name: "Duration",
+                    value: meta.isLiveContent
+                        ? "LIVE"
+                        : this.parseLength(+meta.lengthSeconds),
+                },
+                {
+                    name: "Requested By",
+                    value: `<@${ctx.user.id}>`,
+                },
+                {
+                    name: "Watch👁️",
+                    value: meta.viewCount,
+                },
+                {
+                    name: "Like👍",
+                    value: `${metalong.likes ?? "Unknown"}`,
+                }
+            );
+
+        await ctx.followUp({ embeds: [emb] });
     }
 
     private musicToString(music: IMusic) {
@@ -42,14 +92,31 @@ export class Music extends CogSlashClass {
             text = "**Now Playing**\n" + this.musicToString(now_playing) + "\n";
         }
 
-        if (q.length > 0) text += "**Queue**\n";
+        if (q?.length > 0) text += "**Queue**\n";
 
-        for (const m of q) {
+        for (const m of q ?? []) {
             text += this.musicToString(m) + "\n";
         }
 
-        const emb = style.use(ctx).setTitle("Music Queue").setDescription(text);
+        const emb = style
+            .use(ctx)
+            .setTitle("Music Queue")
+            .setDescription(text || "**The Queue is Empty!**");
 
         await ctx.reply({ embeds: [emb] });
+    }
+
+    @SlashCommand(AutoBuilder("Skip the current song!"))
+    async skip(ctx: CommandInteraction) {
+        Voice.skipMusic(ctx.guildId!);
+
+        await ctx.reply("⏩");
+    }
+
+    @SlashCommand(AutoBuilder("Clear all songs in the queue"))
+    async clear(ctx: CommandInteraction) {
+        Voice.clearMusicQueue(ctx.guildId!);
+
+        await ctx.reply("Cleared!");
     }
 }
