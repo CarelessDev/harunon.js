@@ -211,6 +211,11 @@ export namespace Voice {
         getVoiceConnection(guildId)?.disconnect();
     }
 
+    /** @returns Removed Music or undefined if index out of bound */
+    export function removeFromQueue(guildId: string, index: number) {
+        return music_queue[guildId]?.splice(index - 1, 1)?.[0];
+    }
+
     /**
      * Speak to current voice channel
      * @returns true if success,

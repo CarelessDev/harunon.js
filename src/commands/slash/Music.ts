@@ -182,6 +182,31 @@ export class Music extends CogSlashClass {
     }
 
     @SlashCommand(
+        AutoBuilder("Remove x-th music from queue").addIntegerOption(
+            CocoaOption("index", "Index of removal", true)
+        ),
+        AllGuilds
+    )
+    async remove(ctx: CommandInteraction) {
+        const index = ctx.options.getInteger("index", true);
+
+        if (index <= 0) {
+            await ctx.reply("❗Invalid Index");
+            return;
+        }
+
+        const music = Voice.removeFromQueue(ctx.guildId!, index);
+
+        if (music) {
+            await ctx.reply(
+                `✅ Removed **${music.detail.title} - ${music.detail.author}**`
+            );
+        } else {
+            await ctx.reply("❗There is nothing to remove at that index!");
+        }
+    }
+
+    @SlashCommand(
         AutoBuilder("Search Musics").addStringOption(
             CocoaOption("song", "What to search", true)
         ),
