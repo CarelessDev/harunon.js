@@ -197,6 +197,7 @@ export namespace Voice {
 
     /**
      * Clear all music in queue, stops the current audio player
+     * and disconnect from voice
      */
     export function clearMusicQueue(guildId: string) {
         music_queue[guildId] = [];
@@ -205,7 +206,9 @@ export namespace Voice {
 
         now_playing[guildId] = undefined;
 
-        playNextMusicInQueue(guildId);
+        loop = true;
+
+        getVoiceConnection(guildId)?.disconnect();
     }
 
     /**
