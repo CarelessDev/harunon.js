@@ -22,13 +22,37 @@ export class Music extends CogSlashClass {
 
     private selectMenuHandler?: (i: SelectMenuInteraction) => Awaitable<void>;
 
+    /**
+     * Try to remove components from that select menu and add a message,
+     * catch error and prints if failed
+     */
+    private async yeetSelectMenu(interaction: SelectMenuInteraction) {
+        await interaction
+            .update({
+                content:
+                    "This interaction is no longer tracked! Please create new one!",
+                components: [],
+            })
+            .catch((_) =>
+                console.log(
+                    chalk.red(
+                        `Unknown Select Menu Interaction and cannot update ${interaction.customId}`
+                    )
+                )
+            );
+    }
+
     constructor(client: Client) {
         super("Music", "DJ Harunon 参上!");
         this.client = client;
 
-        client.on("interactionCreate", (interaction) => {
+        client.on("interactionCreate", async (interaction) => {
             if (interaction.isSelectMenu()) {
-                this.selectMenuHandler?.(interaction);
+                if (this.selectMenuHandler) {
+                    this.selectMenuHandler(interaction);
+                } else {
+                    this.yeetSelectMenu(interaction);
+                }
             }
         });
     }
@@ -137,6 +161,25 @@ export class Music extends CogSlashClass {
         return `${p1} ${p2}`;
     }
 
+    @SlashCommand(AutoBuilder("Pause the music"))
+    async pause(ctx: CommandInteraction) {
+        Voice.audio_player[ctx.guildId!]?.pause();
+        await ctx.reply("⏸️");
+    }
+
+    @SlashCommand(AutoBuilder("Resume paused music"))
+    async resume(ctx: CommandInteraction) {
+        Voice.audio_player[ctx.guildId!]?.unpause();
+        await ctx.reply("▶️");
+    }
+
+    @SlashCommand(AutoBuilder("Toggle Loop"))
+    async loop(ctx: CommandInteraction) {
+        Voice.loop = !Voice.loop;
+
+        await ctx.reply(Voice.loop ? "🔁" : "🔂");
+    }
+
     @SlashCommand(
         AutoBuilder("Search Musics").addStringOption(
             CocoaOption("song", "What to search", true)
@@ -190,19 +233,8 @@ export class Music extends CogSlashClass {
 
         this.selectMenuHandler = async (interaction) => {
             if (interaction.customId != thisId) {
-                await interaction
-                    .update({
-                        content:
-                            "This interaction is no longer tracked! Please create new one!",
-                        components: [],
-                    })
-                    .catch((_) =>
-                        console.log(
-                            chalk.red(
-                                `Unknown Select Menu Interaction and cannot update ${interaction.customId}`
-                            )
-                        )
-                    );
+                this.yeetSelectMenu(interaction);
+                return;
             }
 
             await Voice.joinFromContext(ctx);
@@ -248,10 +280,17 @@ export class Music extends CogSlashClass {
 
         let text = "";
 
+        if (Voice.loop) text += "*Loop is currently enabled*\n";
+
+        if (Voice.isPaused(ctx.guildId!))
+            text += "*Music is currently manually paused*\n";
+
         const now_playing = Voice.now_playing[ctx.guildId!];
 
         if (now_playing) {
-            text = "**Now Playing**\n" + this.musicToString(now_playing) + "\n";
+            if (text) text += "\n";
+            text +=
+                "**Now Playing**\n" + this.musicToString(now_playing) + "\n";
         }
 
         if (q?.length > 0) text += "**Queue**\n";

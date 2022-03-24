@@ -33,7 +33,14 @@ export const yt: Scraper = new youtube.default();
 export namespace Voice {
     export const music_queue: { [guildId: string]: Music[] } = {};
     export const now_playing: { [guildId: string]: Music | undefined } = {};
-    const audio_player: { [guildId: string]: AudioPlayer } = {};
+    export const audio_player: { [guildId: string]: AudioPlayer } = {};
+
+    // eslint-disable-next-line prefer-const
+    export let loop = false;
+
+    export function isPaused(guildId: string) {
+        return audio_player[guildId]?.state?.status == AudioPlayerStatus.Paused;
+    }
 
     /**
      * Joins to the channel if not already in one.
@@ -133,6 +140,10 @@ export namespace Voice {
      * false immediately if no connection found or later when error occured
      */
     export function playNextMusicInQueue(guildId: string) {
+        if (loop && now_playing[guildId]) {
+            music_queue[guildId].push(now_playing[guildId]!);
+        }
+
         if (music_queue[guildId]?.length < 1) {
             isPlaying = false;
             getVoiceConnection(guildId)?.disconnect();
@@ -146,6 +157,7 @@ export namespace Voice {
         if (!connection) return false;
 
         const audioPlayer = createAudioPlayer();
+        audio_player[guildId] = audioPlayer;
         connection.subscribe(audioPlayer);
 
         const stream = ytdl.downloadFromInfo(music.rawmeta, {
