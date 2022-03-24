@@ -14,7 +14,7 @@ import chalk from "chalk";
 import { v4 as uuid } from "uuid";
 import { videoInfo } from "ytdl-core";
 
-import { style } from "../shared";
+import { AllGuilds, style } from "../shared";
 import { Voice, Music as IMusic } from "../shared/voice";
 
 export class Music extends CogSlashClass {
@@ -136,7 +136,8 @@ export class Music extends CogSlashClass {
     @SlashCommand(
         AutoBuilder("Play a song!").addStringOption(
             CocoaOption("song", "Song to play", true)
-        )
+        ),
+        AllGuilds
     )
     async play(ctx: CommandInteraction) {
         const song = ctx.options.getString("song", true);
@@ -161,19 +162,19 @@ export class Music extends CogSlashClass {
         return `${p1} ${p2}`;
     }
 
-    @SlashCommand(AutoBuilder("Pause the music"))
+    @SlashCommand(AutoBuilder("Pause the music"), AllGuilds)
     async pause(ctx: CommandInteraction) {
         Voice.audio_player[ctx.guildId!]?.pause();
         await ctx.reply("⏸️");
     }
 
-    @SlashCommand(AutoBuilder("Resume paused music"))
+    @SlashCommand(AutoBuilder("Resume paused music"), AllGuilds)
     async resume(ctx: CommandInteraction) {
         Voice.audio_player[ctx.guildId!]?.unpause();
         await ctx.reply("▶️");
     }
 
-    @SlashCommand(AutoBuilder("Toggle Loop"))
+    @SlashCommand(AutoBuilder("Toggle Loop"), AllGuilds)
     async loop(ctx: CommandInteraction) {
         Voice.loop = !Voice.loop;
 
@@ -183,7 +184,8 @@ export class Music extends CogSlashClass {
     @SlashCommand(
         AutoBuilder("Search Musics").addStringOption(
             CocoaOption("song", "What to search", true)
-        )
+        ),
+        AllGuilds
     )
     async search(ctx: CommandInteraction) {
         const song = ctx.options.getString("song", true);
@@ -274,7 +276,7 @@ export class Music extends CogSlashClass {
         return `[${music.detail.title} - ${music.detail.author}](${music.url})`;
     }
 
-    @SlashCommand(AutoBuilder("Prints out the Queue!"))
+    @SlashCommand(AutoBuilder("Prints out the Queue!"), AllGuilds)
     async queue(ctx: CommandInteraction) {
         const q = Voice.music_queue[ctx.guildId!];
 
@@ -307,14 +309,14 @@ export class Music extends CogSlashClass {
         await ctx.reply({ embeds: [emb] });
     }
 
-    @SlashCommand(AutoBuilder("Skip the current song!"))
+    @SlashCommand(AutoBuilder("Skip the current song!"), AllGuilds)
     async skip(ctx: CommandInteraction) {
         Voice.skipMusic(ctx.guildId!);
 
         await ctx.reply("⏩");
     }
 
-    @SlashCommand(AutoBuilder("Clear all songs in the queue"))
+    @SlashCommand(AutoBuilder("Clear all songs in the queue"), AllGuilds)
     async clear(ctx: CommandInteraction) {
         Voice.clearMusicQueue(ctx.guildId!);
 
