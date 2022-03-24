@@ -275,6 +275,8 @@ export class Music extends CogSlashClass {
                 return;
             }
 
+            await interaction.deferUpdate();
+
             await Voice.joinFromContext(ctx);
             const prom = Voice.addMusicToQueue(
                 ctx.guildId!,
@@ -296,7 +298,7 @@ export class Music extends CogSlashClass {
 
             this.selectMenuHandler = undefined;
 
-            await interaction.update({
+            await interaction.followUp({
                 embeds: [
                     emb.setDescription(newtext),
                     this.musicEmbed(ctx, await prom),
