@@ -49,7 +49,18 @@ export class Music extends CogSlashClass {
         client.on("interactionCreate", async (interaction) => {
             if (interaction.isSelectMenu()) {
                 if (this.selectMenuHandler) {
-                    this.selectMenuHandler(interaction);
+                    try {
+                        this.selectMenuHandler(interaction);
+                    } catch (err) {
+                        console.log(
+                            chalk.red(
+                                `Error while handling Select Menu: ${err}`
+                            )
+                        );
+                        await interaction.channel
+                            ?.send(`${err}`)
+                            .catch(console.error);
+                    }
                 } else {
                     this.yeetSelectMenu(interaction);
                 }
