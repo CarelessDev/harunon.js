@@ -50,7 +50,7 @@ export class Music extends CogSlashClass {
             if (interaction.isSelectMenu()) {
                 if (this.selectMenuHandler) {
                     try {
-                        this.selectMenuHandler(interaction);
+                        await this.selectMenuHandler(interaction);
                     } catch (err) {
                         console.log(
                             chalk.red(
