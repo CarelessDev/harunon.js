@@ -365,6 +365,7 @@ export class Music extends CogSlashClass {
     async mao(ctx: CommandInteraction) {
         await ctx.reply("Mental Assault Operation が始まる！");
 
+        await Voice.joinFromContext(ctx);
         await Voice.addMusicToQueue(
             ctx.guildId!,
             "https://www.youtube.com/watch?v=Yfu6G3f8Xxc"
