@@ -206,7 +206,7 @@ export namespace Voice {
 
         now_playing[guildId] = undefined;
 
-        loop = true;
+        loop = false;
 
         getVoiceConnection(guildId)?.disconnect();
     }
