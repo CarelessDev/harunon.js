@@ -371,4 +371,15 @@ export class Music extends CogSlashClass {
             "https://www.youtube.com/watch?v=Yfu6G3f8Xxc"
         );
     }
+
+    @SlashCommand(AutoBuilder("อหร 10"), AllGuilds)
+    async iheres10(ctx: CommandInteraction) {
+        await ctx.reply("รอ 10 นาทีแล้วนะ ไอควาย");
+
+        await Voice.joinFromContext(ctx);
+        await Voice.addMusicToQueue(
+            ctx.guildId!,
+            "https://www.youtube.com/shorts/AdgJizF_kQM"
+        );
+    }
 }
