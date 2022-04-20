@@ -3,7 +3,6 @@ import { AutoBuilder, CocoaOption } from "cocoa-discord-utils/template";
 
 import { CommandInteraction } from "discord.js";
 
-import { AllGuilds } from "../shared";
 import { Voice } from "../shared/voice";
 
 export class TTS extends CogSlashClass {
@@ -14,8 +13,7 @@ export class TTS extends CogSlashClass {
     @SlashCommand(
         AutoBuilder("Speak!")
             .addStringOption(CocoaOption("text", "What to speak", true))
-            .addStringOption(CocoaOption("lang", "Language")),
-        AllGuilds
+            .addStringOption(CocoaOption("lang", "Language"))
     )
     async speak(ctx: CommandInteraction) {
         const text = ctx.options.getString("text", true);

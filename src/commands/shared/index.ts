@@ -19,7 +19,3 @@ export const style = createEmbedStyle({
     color: Haruno.Color,
     footer: (ctx) => Haruno.Footer(ctx),
 });
-
-export const AllGuilds = (process.env.DEV_GUILD_IDS?.split(",") ?? []).concat(
-    process.env.PROD_GUILD_IDS?.split(",") ?? []
-);
