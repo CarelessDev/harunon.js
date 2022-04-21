@@ -308,7 +308,10 @@ export class Music extends CogSlashClass {
     }
 
     private musicToString(music: IMusic) {
-        return `[${music.detail.title} - ${music.detail.author}](${music.url})`;
+        return `[${music.detail.title} - ${music.detail.author}](${music.url})`.replaceAll(
+            "*",
+            "\\*"
+        );
     }
 
     @SlashCommand(AutoBuilder("Prints out the Queue!"))
@@ -332,8 +335,8 @@ export class Music extends CogSlashClass {
 
         if (q?.length > 0) text += "**Queue**\n";
 
-        for (const m of q ?? []) {
-            text += this.musicToString(m) + "\n";
+        for (const [index, m] of Object.entries(q ?? [])) {
+            text += `**${+index + 1})** ${this.musicToString(m)}\n`;
         }
 
         const emb = style
@@ -358,25 +361,29 @@ export class Music extends CogSlashClass {
         await ctx.reply("Cleared!");
     }
 
-    @SlashCommand(AutoBuilder("Mental Assault Operation"))
-    async mao(ctx: CommandInteraction) {
-        await ctx.reply("Mental Assault Operation が始まる！");
+    static readonly qualityLinks = {
+        mao: "https://www.youtube.com/watch?v=Yfu6G3f8Xxc",
+        iheres10: "https://www.youtube.com/shorts/AdgJizF_kQM",
+    };
+
+    @SlashCommand(
+        AutoBuilder("Play quality musics").addStringOption((option) =>
+            option
+                .setName("quality")
+                .setDescription("Quality musics to play")
+                .setRequired(true)
+                .addChoices(Object.keys(Music.qualityLinks).map((k) => [k, k]))
+        )
+    )
+    async quality(ctx: CommandInteraction) {
+        await ctx.reply("👌");
+
+        const quality = ctx.options.getString(
+            "quality",
+            true
+        ) as keyof typeof Music.qualityLinks;
 
         await Voice.joinFromContext(ctx);
-        await Voice.addMusicToQueue(
-            ctx.guildId!,
-            "https://www.youtube.com/watch?v=Yfu6G3f8Xxc"
-        );
-    }
-
-    @SlashCommand(AutoBuilder("อหร 10"))
-    async iheres10(ctx: CommandInteraction) {
-        await ctx.reply("รอ 10 นาทีแล้วนะ ไอควาย");
-
-        await Voice.joinFromContext(ctx);
-        await Voice.addMusicToQueue(
-            ctx.guildId!,
-            "https://www.youtube.com/shorts/AdgJizF_kQM"
-        );
+        await Voice.addMusicToQueue(ctx.guildId!, Music.qualityLinks[quality]);
     }
 }

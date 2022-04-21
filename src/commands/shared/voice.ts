@@ -10,9 +10,11 @@ import {
     AudioPlayerStatus,
     createAudioPlayer,
     createAudioResource,
+    DiscordGatewayAdapterCreator,
     entersState,
     getVoiceConnection,
     joinVoiceChannel as libJoinVoiceChannel,
+    VoiceConnection,
     VoiceConnectionStatus,
 } from "@discordjs/voice";
 
@@ -34,6 +36,12 @@ export namespace Voice {
     export const music_queue: { [guildId: string]: Music[] } = {};
     export const now_playing: { [guildId: string]: Music | undefined } = {};
     export const audio_player: { [guildId: string]: AudioPlayer } = {};
+
+    export function destroyConnection(conn: VoiceConnection | undefined) {
+        try {
+            conn?.destroy();
+        } catch (e) {}
+    }
 
     // eslint-disable-next-line prefer-const
     export let loop = false;
@@ -74,7 +82,8 @@ export namespace Voice {
         const connection = libJoinVoiceChannel({
             channelId: channel.id,
             guildId: channel.guild.id,
-            adapterCreator: channel.guild.voiceAdapterCreator,
+            adapterCreator: channel.guild
+                .voiceAdapterCreator as DiscordGatewayAdapterCreator,
             selfMute: false,
         });
 
@@ -95,7 +104,7 @@ export namespace Voice {
                 // Seems to be reconnecting to a new channel - ignore disconnect
             } catch (error) {
                 // Seems to be a real disconnect which SHOULDN'T be recovered from
-                connection.destroy();
+                destroyConnection(connection);
                 await onDisconnect?.();
             }
         });
@@ -146,7 +155,7 @@ export namespace Voice {
 
         if (music_queue[guildId]?.length < 1) {
             isPlaying = false;
-            getVoiceConnection(guildId)?.disconnect();
+            destroyConnection(getVoiceConnection(guildId));
             return;
         }
 
@@ -208,7 +217,7 @@ export namespace Voice {
 
         loop = false;
 
-        getVoiceConnection(guildId)?.disconnect();
+        destroyConnection(getVoiceConnection(guildId));
     }
 
     /** @returns Removed Music or undefined if index out of bound */
