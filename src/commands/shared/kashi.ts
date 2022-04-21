@@ -1,12 +1,7 @@
-import * as fsSync from "fs";
 import fs from "fs/promises";
 
-export function listsAllLyricsSync() {
-    return fsSync.readdirSync("data/lyrics");
-}
-
-export function CommandChoice() {
-    const all = listsAllLyricsSync();
+export async function CommandChoice() {
+    const all = await fs.readdir("data/lyrics");
     return all.map((fname) => {
         const tokens = fname.split(".");
         const rfn = tokens.slice(0, tokens.length - 1).join(".");

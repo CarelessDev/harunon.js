@@ -637,14 +637,14 @@ chownr@^2.0.0:
   resolved "https://registry.yarnpkg.com/chownr/-/chownr-2.0.0.tgz#15bfbe53d2eab4cf70f18a8cd68ebe5b3cb1dece"
   integrity sha512-bIomtDF5KGpdogkLd9VspvFzk9KfpyyGlS8YFVZl7TGPBHL5snIOnxeshwVgPteQ9b4Eydl+pVbIyE1DcvCWgQ==
 
-cocoa-discord-utils@^1.4.2:
-  version "1.4.2"
-  resolved "https://registry.yarnpkg.com/cocoa-discord-utils/-/cocoa-discord-utils-1.4.2.tgz#e62ec93d65fc6519b453298b1f5cc77529566fb1"
-  integrity sha512-14cLDmVAX24h06+HC21O3wtNHFA9uiDTqCPulXmz/yd6RK4RTVMUTxhZL02yaLeQ/0g+9lNeYRmnIcCeZ02obg==
+cocoa-discord-utils@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/cocoa-discord-utils/-/cocoa-discord-utils-1.5.0.tgz#b87aa14c30fd74505f5df85843f29db297e36984"
+  integrity sha512-1+FBQ3mve0Z7qSYLCi5NxC6kICZn3Dhqx1Y4sVYsvRBsj5GFP/GAw5DuWbE1JQwkiMEN7YmzIXiZ1DgzQipxrQ==
   dependencies:
     "@discordjs/builders" "^0.12.0"
     chalk "4.1.2"
-    commander "^9.1.0"
+    commander "^9.2.0"
     discord.js "^13.6.0"
 
 color-convert@^1.9.0:
@@ -683,7 +683,7 @@ combined-stream@^1.0.8:
   dependencies:
     delayed-stream "~1.0.0"
 
-commander@^9.1.0:
+commander@^9.2.0:
   version "9.2.0"
   resolved "https://registry.yarnpkg.com/commander/-/commander-9.2.0.tgz#6e21014b2ed90d8b7c9647230d8b7a94a4a419a9"
   integrity sha512-e2i4wANQiSXgnrBlIatyHtP1odfUp0BbV5Y5nEGbxtIrStkEOAAzCUirvLBNXHLr7kwLvJl6V+4V3XV9x7Wd9w==

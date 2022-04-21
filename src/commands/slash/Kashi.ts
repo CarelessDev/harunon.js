@@ -1,4 +1,4 @@
-import { CogSlashClass, SlashCommand } from "cocoa-discord-utils/slash/class";
+import { CogSlashClass, FutureSlash } from "cocoa-discord-utils/slash/class";
 import {
     AutoBuilder,
     Ephemeral,
@@ -15,17 +15,18 @@ export class Kashi extends CogSlashClass {
         super("Kashi", "Lyrics Related Cog");
     }
 
-    @SlashCommand(
-        AutoBuilder("Get Lyrics of the Song")
+    @FutureSlash(async () => {
+        const choices = await CommandChoice();
+        return AutoBuilder("Get Lyrics of the Song")
             .addStringOption((option) =>
                 option
                     .setName("song")
                     .setDescription("Name of the song")
                     .setRequired(true)
-                    .addChoices(CommandChoice())
+                    .addChoices(choices)
             )
-            .addBooleanOption(Ephemeral())
-    )
+            .addBooleanOption(Ephemeral());
+    })
     async lyric(ctx: CommandInteraction) {
         const song = ctx.options.getString("song", true);
         const ephemeral = getEphemeral(ctx);

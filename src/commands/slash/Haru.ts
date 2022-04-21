@@ -1,4 +1,4 @@
-import { CocoaBuildTime, CocoaVersion } from "cocoa-discord-utils/meta";
+import { CocoaVersion } from "cocoa-discord-utils/meta";
 import { CogSlashClass, SlashCommand } from "cocoa-discord-utils/slash/class";
 import {
     AutoBuilder,
@@ -238,7 +238,7 @@ export class Haru extends CogSlashClass {
             .use(ctx)
             .setTitle("Harunon's Status")
             .setDescription(
-                `Harunon Bot Version: ${process.env.npm_package_version}\nCocoa Utils Version: ${CocoaVersion} / ${CocoaBuildTime}`
+                `Harunon Bot Version: ${process.env.npm_package_version}\nCocoa Utils Version: ${CocoaVersion}`
             )
             .addFields(...(await getStatusFields(ctx)))
             .setFooter({
