@@ -1,11 +1,15 @@
 import { Music as MusicBase, Voice as LibVoice } from "@leomotors/music-bot";
 
-import { SlashCommand } from "cocoa-discord-utils/slash/class";
+import { FutureSlash } from "cocoa-discord-utils/slash/class";
 import { AutoBuilder } from "cocoa-discord-utils/template";
 
 import { CommandInteraction, Client } from "discord.js";
 
+import * as fs from "fs/promises";
+
 import { style } from "../shared";
+
+let qualityLinks: { [key: string]: string };
 
 // * Note: Extending Class Cog is not what you should do unless you know
 // * underlying mechanics
@@ -14,32 +18,28 @@ export class Music extends MusicBase {
         super(client, style, "DJ Harunon 参上!");
     }
 
-    static readonly qualityLinks = {
-        mao: "https://www.youtube.com/watch?v=Yfu6G3f8Xxc",
-        iheres10: "https://www.youtube.com/shorts/AdgJizF_kQM",
-    };
+    @FutureSlash(async () => {
+        qualityLinks = JSON.parse(
+            (await fs.readFile("data/quality.json")).toString()
+        );
 
-    @SlashCommand(
-        AutoBuilder("Play quality musics").addStringOption((option) =>
+        return AutoBuilder("Play quality musics").addStringOption((option) =>
             option
                 .setName("quality")
                 .setDescription("Quality musics to play")
                 .setRequired(true)
-                .addChoices(Object.keys(Music.qualityLinks).map((k) => [k, k]))
-        )
-    )
+                .addChoices(Object.keys(qualityLinks).map((k) => [k, k]))
+        );
+    })
     async quality(ctx: CommandInteraction) {
         await ctx.reply("👌");
 
         const quality = ctx.options.getString(
             "quality",
             true
-        ) as keyof typeof Music.qualityLinks;
+        ) as keyof typeof qualityLinks;
 
         await LibVoice.joinFromContext(ctx);
-        await LibVoice.addMusicToQueue(
-            ctx.guildId!,
-            Music.qualityLinks[quality]
-        );
+        await LibVoice.addMusicToQueue(ctx.guildId!, qualityLinks[quality]);
     }
 }
