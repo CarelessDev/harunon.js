@@ -1,3 +1,5 @@
+import { Version as MusicVersion } from "@leomotors/music-bot/dist/config.g";
+
 import { CocoaVersion } from "cocoa-discord-utils/meta";
 import { CogSlashClass, SlashCommand } from "cocoa-discord-utils/slash/class";
 import {
@@ -238,7 +240,7 @@ export class Haru extends CogSlashClass {
             .use(ctx)
             .setTitle("Harunon's Status")
             .setDescription(
-                `Harunon Bot Version: ${process.env.npm_package_version}\nCocoa Utils Version: ${CocoaVersion}`
+                `Harunon Bot Version: ${process.env.npm_package_version}\nCocoa Utils Version: ${CocoaVersion}\n@leomotors/music-bot Version: ${MusicVersion}`
             )
             .addFields(...(await getStatusFields(ctx)))
             .setFooter({
