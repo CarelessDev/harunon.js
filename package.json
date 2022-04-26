@@ -1,6 +1,6 @@
 {
   "name": "harunon.js",
-  "version": "3.1.222",
+  "version": "3.1.224",
   "description": "Multipurpose Discord Bot with Music that serves our server",
   "main": "index.js",
   "author": "CarelessDev",
@@ -17,11 +17,11 @@
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^3.2.0",
-    "@types/node": "^17.0.25",
+    "@types/node": "^17.0.27",
     "@types/uuid": "^8.3.4",
-    "@typescript-eslint/eslint-plugin": "^5.20.0",
-    "@typescript-eslint/parser": "^5.20.0",
-    "eslint": "^8.13.0",
+    "@typescript-eslint/eslint-plugin": "^5.21.0",
+    "@typescript-eslint/parser": "^5.21.0",
+    "eslint": "^8.14.0",
     "prettier": "^2.6.2",
     "typescript": "^4.6.3"
   },
@@ -32,7 +32,7 @@
     "@leomotors/music-bot": "^0.2.2",
     "@yimura/scraper": "^1.2.3",
     "chalk": "^5.0.1",
-    "cocoa-discord-utils": "^1.6.0",
+    "cocoa-discord-utils": "^1.7.0",
     "discord.js": "^13.6.0",
     "dotenv": "^16.0.0",
     "google-tts-api": "^2.0.2",
