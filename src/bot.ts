@@ -3,7 +3,9 @@ import "dotenv/config";
 import {
     ActivityGroupLoader,
     checkLogin,
+    Cocoa,
     ConsoleManager,
+    LogStatus,
     useActivityGroup,
 } from "cocoa-discord-utils";
 import { MessageCenter } from "cocoa-discord-utils/message";
@@ -24,7 +26,10 @@ const mcenter = new MessageCenter(client, { prefixes: ["simp"] });
 mcenter.addCogs(new HaruM());
 mcenter.useHelpCommand(style);
 mcenter.on("error", async (name, err, msg) => {
-    console.log(chalk.red(`Command ${name} just error!`));
+    Cocoa.log(
+        `Command "${name}" error at ${msg.guild?.name} : ${err}`,
+        LogStatus.Error
+    );
     await msg.reply(`あら？, Error Occured: ${err}`);
 });
 
@@ -32,8 +37,16 @@ const scenter = new SlashCenter(client, process.env.GUILD_IDS?.split(","));
 scenter.addCogs(new Haru(), new Kashi(), new Music(client), new TTS());
 scenter.useHelpCommand(style);
 scenter.on("error", async (name, err, ctx) => {
-    console.log(chalk.red(`Command ${name} just error!`));
+    Cocoa.log(
+        `Command "${name}" error at ${ctx.guild?.name} : ${err}`,
+        LogStatus.Error
+    );
     await ctx.channel?.send(`あら？, Error Occured: ${err}`);
+});
+scenter.on("interaction", (name, ctx) => {
+    Cocoa.log(
+        `Handled "${name}" invoked by ${ctx.user.tag} at ${ctx.guild?.name}`
+    );
 });
 
 const activity = new ActivityGroupLoader("data/activities.json");
