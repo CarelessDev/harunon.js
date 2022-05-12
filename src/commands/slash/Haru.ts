@@ -249,4 +249,42 @@ export class Haru extends CogSlashClass {
 
         await ctx.reply({ embeds: [emb], ephemeral });
     }
+
+    formatTime(ms_timestamp: number) {
+        const t = Math.round(ms_timestamp / 1000);
+
+        return `<t:${t}> (<t:${t}:R>)`;
+    }
+
+    @SlashCommand(
+        AutoBuilder("Get Selected User Information").addUserOption(
+            CocoaOption("user", "Target User", true)
+        )
+    )
+    async fbi(ctx: CommandInteraction) {
+        const user = ctx.options.getUser("user", true);
+
+        const gmember = ctx.guild?.members.cache.get(user.id);
+
+        const emb = style
+            .use(ctx)
+            .setTitle(user.tag)
+            .setDescription(
+                `ID: ${user.id}${user.bot ? "\n🤖Beep Boop🤖" : ""}`
+            )
+            .setThumbnail(user.avatarURL() ?? user.defaultAvatarURL)
+            .addField({
+                name: "Created At",
+                value: this.formatTime(user.createdTimestamp),
+            });
+
+        if (gmember?.joinedTimestamp) {
+            emb.addField({
+                name: "Joined At",
+                value: this.formatTime(gmember.joinedTimestamp),
+            });
+        }
+
+        await ctx.reply({ embeds: [emb] });
+    }
 }
