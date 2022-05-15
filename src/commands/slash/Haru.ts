@@ -256,6 +256,8 @@ export class Haru extends CogSlashClass {
         return `<t:${t}> (<t:${t}:R>)`;
     }
 
+    readonly fbiStyle = style.extends({ author: "bot" });
+
     @SlashCommand(
         AutoBuilder("Get Selected User Information").addUserOption(
             CocoaOption("user", "Target User", true)
@@ -266,7 +268,7 @@ export class Haru extends CogSlashClass {
 
         const gmember = ctx.guild?.members.cache.get(user.id);
 
-        const emb = style
+        const emb = this.fbiStyle
             .use(ctx)
             .setTitle(user.tag)
             .setDescription(
