@@ -1,10 +1,4 @@
-# 雪ノ下陽乃.js
-
-"陽乃ベストお姉さん" — said CarelessDev/oneesan-lover
-
-![](https://c.tenor.com/ceojyowWu0oAAAAC/haruno-yukinoshita-oregairu.gif)
-
-## OUR Bot
+# harunon.js
 
 Haruno is the bot that is serving _our_ server
 
@@ -12,7 +6,7 @@ replaced [SIMP Bot](https://github.com/CarelessDev/SIMP-Bot/)
 
 ## ✨ Features
 
-- Music from YouTube
+- Mainly: Music from YouTube with power of [@leomotors/music-bot](https://github.com/Leomotors/music-bot#%EF%B8%8F-highlight) << some gallery there
 
 - Miscellanous ~~useless~~ features
 
@@ -20,7 +14,7 @@ replaced [SIMP Bot](https://github.com/CarelessDev/SIMP-Bot/)
 
 Using Cocoa Discord Utils and 💛JavaScript💛
 
-Will replace Harunon V2 or [Harunon(.py)](https://github.com/CarelessDev/Harunon)
+Replaced Harunon V2 or [Harunon(.py)](https://github.com/CarelessDev/Harunon)
 
 ## Utility Library behind this Bot!
 
@@ -29,3 +23,7 @@ Will replace Harunon V2 or [Harunon(.py)](https://github.com/CarelessDev/Harunon
 ![](https://c.tenor.com/JjAZAfWSqQgAAAAC/gochiusa-cocoa.gif)
 
 ### 💛💛💛
+
+"陽乃ベストお姉さん" — said CarelessDev/oneesan-lover
+
+![](https://c.tenor.com/ceojyowWu0oAAAAC/haruno-yukinoshita-oregairu.gif)
