@@ -1,6 +1,6 @@
 {
   "name": "harunon.js",
-  "version": "3.1.270",
+  "version": "3.1.280",
   "description": "Multipurpose Discord Bot with Music that serves our server",
   "main": "index.js",
   "author": "CarelessDev",
@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "@discordjs/opus": "^0.7.0",
-    "@leomotors/music-bot": "^0.5.0",
+    "@leomotors/music-bot": "^0.6.0",
     "@yimura/scraper": "^1.2.3",
     "chalk": "^5.0.1",
     "dotenv": "^16.0.1",

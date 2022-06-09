@@ -338,10 +338,10 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
-"@leomotors/music-bot@^0.5.0":
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/@leomotors/music-bot/-/music-bot-0.5.0.tgz#fd1439826449a7ecb92ff3bc0f0092b004fae6a0"
-  integrity sha512-ITP33Sx6ZD8ACVShlPFj/JDG1Toj8S0CaoXbIKo5uvr/E94MMI9H0GKjWKlMIyOTW/n0dPxn3WS0VPslTL3bEQ==
+"@leomotors/music-bot@^0.6.0":
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/@leomotors/music-bot/-/music-bot-0.6.0.tgz#e203b6d4e848eb82c4a50002c77579c5089d7e54"
+  integrity sha512-eBVztjSTgdOxd2sOigciFSGOwlfYKPsmpxY6wtVesosFEwQZm4bJ3MB+1zBdJWwUElH6l0mTe0x83veCXt0l6g==
   dependencies:
     "@discordjs/voice" "^0.10.0"
     "@yimura/scraper" "^1.2.3"

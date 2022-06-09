@@ -32,7 +32,7 @@ export class Music extends MusicBase {
         );
     })
     async quality(ctx: CommandInteraction) {
-        await ctx.reply("👌");
+        await ctx.deferReply();
 
         const quality = ctx.options.getString(
             "quality",
@@ -40,6 +40,17 @@ export class Music extends MusicBase {
         ) as keyof typeof qualityLinks;
 
         await LibVoice.joinFromContext(ctx);
-        await LibVoice.addMusicToQueue(ctx.guildId!, qualityLinks[quality]);
+        const result = await LibVoice.addMusicToQueue(
+            ctx.guildId!,
+            ctx.user.id,
+            qualityLinks[quality]
+        );
+
+        if (result != "No results found") {
+            const emb = this.musicEmbed(ctx, ctx.user.id, result);
+            await ctx.followUp({ embeds: [emb] });
+        } else {
+            await ctx.followUp("Unexpected Error: Video not found");
+        }
     }
 }
