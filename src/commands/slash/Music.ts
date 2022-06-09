@@ -42,8 +42,8 @@ export class Music extends MusicBase {
         await LibVoice.joinFromContext(ctx);
         const result = await LibVoice.addMusicToQueue(
             ctx.guildId!,
-            ctx.user.id,
-            qualityLinks[quality]
+            qualityLinks[quality],
+            ctx.user.id
         );
 
         if (result != "No results found") {
