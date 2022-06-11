@@ -1,7 +1,11 @@
 import { Version as MusicVersion } from "@leomotors/music-bot/dist/config.g";
 
 import { CocoaVersion } from "cocoa-discord-utils/meta";
-import { CogSlashClass, SlashCommand } from "cocoa-discord-utils/slash/class";
+import {
+    CogSlashClass,
+    SlashCommand,
+    FutureSlash,
+} from "cocoa-discord-utils/slash/class";
 import {
     AutoBuilder,
     CocoaOption,
@@ -16,7 +20,6 @@ import { createWriteStream } from "fs";
 import fetch from "node-fetch";
 
 import { style } from "../shared";
-import { getFrameListSync } from "../shared/haru";
 import { exec } from "../shared/os";
 
 import { HelixError, makeHelix } from "./_helix";
@@ -86,8 +89,15 @@ export class Haru extends CogSlashClass {
         await ctx.reply(`<@${who.id}> is gay!`);
     }
 
-    @SlashCommand(
-        AutoBuilder("Create Golden Frame")
+    @FutureSlash(async () => {
+        const frameLists = (await exec("golden-frame list")).stdout
+            .split("\n")
+            .slice(1)
+            .filter((l) => l.length)
+            .map((e) => e.split(" ")[0].trim())
+            .map((e) => [e, e]) as [string, string][];
+
+        return AutoBuilder("Create Golden Frame")
             .addUserOption(
                 CocoaOption("who", "Who to put in the golden frame", true)
             )
@@ -96,9 +106,9 @@ export class Haru extends CogSlashClass {
                     .setName("frame")
                     .setDescription("Frame Name")
                     .setRequired(true)
-                    .addChoices(getFrameListSync())
-            )
-    )
+                    .addChoices(frameLists)
+            );
+    })
     async goldenframe(ctx: CommandInteraction) {
         const frame = ctx.options.getString("frame", true);
 
@@ -122,9 +132,7 @@ export class Haru extends CogSlashClass {
             return;
         }
 
-        const stream = res.body.pipe(
-            createWriteStream("lib/golden-frame/input.png")
-        );
+        const stream = res.body.pipe(createWriteStream("input.png"));
 
         await new Promise<void>((res, rej) => {
             stream.on("close", () => {
@@ -135,11 +143,9 @@ export class Haru extends CogSlashClass {
             });
         });
 
-        await exec(
-            `cd lib/golden-frame && src/cli.py build ${frame} input.png --output=output.png`
-        );
+        await exec(`golden-frame build ${frame} input.png --output=output.png`);
 
-        await ctx.followUp({ files: ["lib/golden-frame/output.png"] });
+        await ctx.followUp({ files: ["output.png"] });
     }
 
     @SlashCommand(
