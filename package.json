@@ -1,6 +1,6 @@
 {
   "name": "harunon.js",
-  "version": "3.1.280",
+  "version": "3.1.290",
   "description": "Multipurpose Discord Bot with Music that serves our server",
   "main": "index.js",
   "author": "CarelessDev",
@@ -17,7 +17,7 @@
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^3.2.0",
-    "@types/node": "^17.0.41",
+    "@types/node": "^17.0.42",
     "@types/uuid": "^8.3.4",
     "@typescript-eslint/eslint-plugin": "^5.27.1",
     "@typescript-eslint/parser": "^5.27.1",
@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "@discordjs/opus": "^0.7.0",
-    "@leomotors/music-bot": "^0.6.0",
+    "@leomotors/music-bot": "^0.7.0",
     "@yimura/scraper": "^1.2.3",
     "chalk": "^5.0.1",
     "dotenv": "^16.0.1",
