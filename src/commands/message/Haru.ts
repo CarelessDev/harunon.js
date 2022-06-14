@@ -42,6 +42,6 @@ export class Haru extends CogMessageClass {
             })
             .setDescription(`Ping = ${msg.client.ws.ping} ms`);
 
-        await msg.reply({ embeds: [emb] });
+        await msg.reply({ embeds: [emb.toJSON()] });
     }
 }

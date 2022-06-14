@@ -16,8 +16,8 @@ import {
 
 import { CommandInteraction, TextChannel } from "discord.js";
 
-import { createWriteStream } from "fs";
 import fetch from "node-fetch";
+import { createWriteStream } from "node:fs";
 
 import { style } from "../shared";
 import { exec } from "../shared/os";
@@ -95,40 +95,51 @@ export class Haru extends CogSlashClass {
             .slice(1)
             .filter((l) => l.length)
             .map((e) => e.split(" ")[0].trim())
-            .map((e) => [e, e]) as [string, string][];
+            .map((e) => ({ name: e, value: e }));
 
         return AutoBuilder("Create Golden Frame")
-            .addUserOption(
-                CocoaOption("who", "Who to put in the golden frame", true)
-            )
             .addStringOption((option) =>
                 option
                     .setName("frame")
                     .setDescription("Frame Name")
                     .setRequired(true)
-                    .addChoices(frameLists)
+                    .addChoices(...frameLists)
+            )
+            .addUserOption(CocoaOption("who", "Who to put in the golden frame"))
+            .addAttachmentOption(
+                CocoaOption("img", "Image to put in the frame")
             );
     })
     async goldenframe(ctx: CommandInteraction) {
         const frame = ctx.options.getString("frame", true);
 
-        const target = ctx.options.getUser("who", true);
+        const target_user = ctx.options.getUser("who");
 
-        const url = target.avatarURL({ size: 4096 });
+        const target_img = ctx.options.getAttachment("img");
 
-        if (!url) {
-            await ctx.reply(
-                "Cannot G O L D E N F R A M E: Target user has no profile picture!"
-            );
+        if (!target_user && !target_img) {
+            await ctx.reply("Either user or image must be given!");
             return;
         }
 
         await ctx.deferReply();
 
-        const res = await fetch(url);
+        let url: string | null;
+        if (target_user) {
+            url = target_user.avatarURL({ size: 4096 });
+            if (!url) {
+                await ctx.followUp(
+                    "Cannot G O L D E N F R A M E: Target user has no profile picture!"
+                );
+                return;
+            }
+        } else {
+            url = target_img!.attachment.toString();
+        }
 
+        const res = await fetch(url);
         if (!res.body) {
-            await ctx.followUp("Where is body?");
+            await ctx.followUp("Where is body? (Fetch Error)");
             return;
         }
 
@@ -185,7 +196,7 @@ export class Haru extends CogSlashClass {
             })
             .setDescription(`Ping = ${ctx.client.ws.ping} ms`);
 
-        await ctx.reply({ embeds: [emb], ephemeral: e });
+        await ctx.reply({ embeds: [emb.toJSON()], ephemeral: e });
     }
 
     @SlashCommand(
@@ -248,12 +259,12 @@ export class Haru extends CogSlashClass {
             .setDescription(
                 `Harunon Bot Version: ${process.env.npm_package_version}\nCocoa Utils Version: ${CocoaVersion}\n@leomotors/music-bot Version: ${MusicVersion}`
             )
-            .addFields(...(await getStatusFields(ctx)))
+            .addFields(await getStatusFields(ctx))
             .setFooter({
                 text: "Bot made by CarelessDev/oneesan-lover ❤️❤️❤️",
             });
 
-        await ctx.reply({ embeds: [emb], ephemeral });
+        await ctx.reply({ embeds: [emb.toJSON()], ephemeral });
     }
 
     formatTime(ms_timestamp: number) {
@@ -293,6 +304,6 @@ export class Haru extends CogSlashClass {
             });
         }
 
-        await ctx.reply({ embeds: [emb] });
+        await ctx.reply({ embeds: [emb.toJSON()] });
     }
 }

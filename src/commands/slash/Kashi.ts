@@ -23,7 +23,7 @@ export class Kashi extends CogSlashClass {
                     .setName("song")
                     .setDescription("Name of the song")
                     .setRequired(true)
-                    .addChoices(choices)
+                    .addChoices(...choices)
             )
             .addBooleanOption(Ephemeral());
     })
@@ -36,6 +36,6 @@ export class Kashi extends CogSlashClass {
         const emb = style.use(ctx).setTitle(title).setDescription(content);
         if (img) emb.setThumbnail(img);
 
-        await ctx.reply({ embeds: [emb], ephemeral });
+        await ctx.reply({ embeds: [emb.toJSON()], ephemeral });
     }
 }

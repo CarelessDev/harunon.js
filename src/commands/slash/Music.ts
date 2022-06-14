@@ -28,7 +28,12 @@ export class Music extends MusicBase {
                 .setName("quality")
                 .setDescription("Quality musics to play")
                 .setRequired(true)
-                .addChoices(Object.keys(qualityLinks).map((k) => [k, k]))
+                .addChoices(
+                    ...Object.keys(qualityLinks).map((k) => ({
+                        name: k,
+                        value: k,
+                    }))
+                )
         );
     })
     async quality(ctx: CommandInteraction) {
@@ -48,7 +53,7 @@ export class Music extends MusicBase {
 
         if (result != "No results found") {
             const emb = this.musicEmbed(ctx, ctx.user.id, result);
-            await ctx.followUp({ embeds: [emb] });
+            await ctx.followUp({ embeds: [emb.toJSON()] });
         } else {
             await ctx.followUp("Unexpected Error: Video not found");
         }

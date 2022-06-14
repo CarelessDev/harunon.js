@@ -5,7 +5,7 @@ export async function CommandChoice() {
     return all.map((fname) => {
         const tokens = fname.split(".");
         const rfn = tokens.slice(0, tokens.length - 1).join(".");
-        return [rfn, rfn] as [string, string];
+        return { name: rfn, value: rfn };
     });
 }
 
