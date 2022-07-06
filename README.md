@@ -4,6 +4,9 @@ Haruno is the bot that is serving _our_ server
 
 replaced [SIMP Bot](https://github.com/CarelessDev/SIMP-Bot/)
 
+**NOTICE** Harunon.js will soon be called Waifu Bot (and the waifu we simp will soon be changed).
+From Version 3.2, Waifu Bot will be moved to @Leomotors [personal repository](https://github.com/Leomotors/waifu-bot).
+
 ## ✨ Features
 
 - Mainly: Music from YouTube with power of [@leomotors/music-bot](https://github.com/Leomotors/music-bot#%EF%B8%8F-highlight) << some gallery there
